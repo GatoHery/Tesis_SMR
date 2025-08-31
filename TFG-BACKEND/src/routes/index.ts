@@ -1,0 +1,8 @@
+export * as authRoutes from './auth.routes'
+export * as dashboardRoutes from './dashboard.routes'
+export * as reservationRoutes from './reservation.routes'
+export * as resourcesRoutes from './resources.routes'
+export * as rolesRoutes from './roles.routes'
+export * as sensorDeviceRoutes from './sensorDevice.routes'
+export * as soundDetectionRoutes from './soundDetection.routes'
+export * as userRoutes from './user.routes'
