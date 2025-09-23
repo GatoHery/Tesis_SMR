@@ -10,7 +10,7 @@ interface AuthState {
   error: string | null;
   isAuthenticated: boolean | null;
   loading: boolean;
-  OAuthGooglelogin: (googleAccessToken: string) => void;
+  OAuthGooglelogin: (authorizationCode: string) => void;
   OAuthMicrosoftlogin: () => void;
   logout: () => void;
   whoami: () => void;
@@ -25,10 +25,10 @@ const useAuthStore = create<AuthState>()(
     isAuthenticated: null,
     loading: false,
 
-    OAuthGooglelogin: async (googleAccessToken) => {
+    OAuthGooglelogin: async (authorizationCode) => {
       try {
         set({ loading: true });
-        const data = await authService.loginWithGoogle(googleAccessToken);
+        const data = await authService.loginWithGoogle(authorizationCode);
 
         const { user, token } = data;
         const formattedUser: AuthUser = {

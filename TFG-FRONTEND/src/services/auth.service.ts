@@ -1,7 +1,6 @@
-import axios from 'axios';
 import api from '@/api/axiosInstance';
 
-const AUTH_PATH = '/auth';
+const AUTH_PATH = '/api/auth';
 
 type UserMicrosoft = {
   id: string,
@@ -16,9 +15,9 @@ type UserMicrosoft = {
 }
 
 export const authService = {
-  loginWithGoogle: async (googleAccessToken: string) => {
+  loginWithGoogle: async (authorizationCode: string) => {
     const res = await api.post(`${AUTH_PATH}/google`, {
-      code: googleAccessToken,
+      code: authorizationCode,
     });
 
     return res.data;
@@ -64,7 +63,7 @@ export const authService = {
   },
 
   loginWithCredentials: async (email: string, password: string) => {
-    const res = await axios.post(`${AUTH_PATH}/login`, {
+    const res = await api.post(`${AUTH_PATH}/login`, {
       email,
       password,
     });
