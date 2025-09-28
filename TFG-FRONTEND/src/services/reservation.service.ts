@@ -1,6 +1,6 @@
 import api from "@/api/axiosInstance";
 
-const RESERVATION_PATH = '/reservations';
+const RESERVATION_PATH = '/api/reservations';
 
 export const reservationService = {
 

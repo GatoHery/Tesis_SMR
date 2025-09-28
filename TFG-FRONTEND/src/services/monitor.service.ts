@@ -1,8 +1,8 @@
 import api from "@/api/axiosInstance";
 import createEspInstance from "@/api/espInstance";
 
-const RESOURCE_PATH = '/resources';
-const SENSOR_PATH = '/sensor-devices';
+const RESOURCE_PATH = '/api/resources';
+const SENSOR_PATH = '/api/sensor-devices';
 
 export const monitorService = {
   fetchResources: async () => {

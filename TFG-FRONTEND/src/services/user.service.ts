@@ -1,6 +1,6 @@
 import api from "@/api/axiosInstance";
 
-const USER_PATH = '/users';
+const USER_PATH = '/api/users';
 
 export const userService = {
   fetchUsers: async () => {

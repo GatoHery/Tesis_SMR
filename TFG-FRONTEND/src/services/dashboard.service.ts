@@ -1,6 +1,6 @@
 import api from "@/api/axiosInstance";
 
-const DASHBOARD_PATH = '/dashboard';
+const DASHBOARD_PATH = '/api/dashboard';
 
 export const dashboardService = {
   fetchMetrics: async () => {

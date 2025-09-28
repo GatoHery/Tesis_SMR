@@ -1,6 +1,6 @@
 import api from "@/api/axiosInstance";
 
-const ALERT_PATH = '/sound-detection';
+const ALERT_PATH = '/api/sound-detection';
 
 export const alertService = {
   fetchAlerts: async () => {
