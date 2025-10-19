@@ -19,7 +19,9 @@ export const getAlertColumns = (): TableProps<Alert>["columns"] => {
       dataIndex: "timestamp",
       key: "timestamp",
       render: (_, record) => {
-        return new Date(record.timestamp).toLocaleDateString("es-ES", {
+        const date = new Date(record.timestamp);
+        date.setHours(date.getHours() + 6);
+        return date.toLocaleDateString("es-ES", {
           day: "2-digit",
           month: "long",
           year: "numeric",
