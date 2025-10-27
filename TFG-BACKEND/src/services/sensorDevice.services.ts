@@ -42,3 +42,21 @@ export const upsertSensorDeviceService = async (data: {
     throw new Error('Error upserting sensor device');
   }
 };
+
+export const updateSensorThresholdService = async (ip: string, threshold: number) => {
+  try {
+    const updatedSensor = await SensorDevice.findOneAndUpdate(
+      { ip: ip },
+      { 
+        threshold: threshold,
+        lastUpdated: new Date()
+      },
+      { new: true }
+    );
+
+    return updatedSensor;
+  } catch (error) {
+    console.error('Error in updateSensorThresholdService:', error);
+    throw error;
+  }
+};

@@ -16,6 +16,9 @@ const Linechart = () => {
   const {
     token: { colorPrimary, colorError, colorBgContainer },
   } = theme.useToken();
+  
+  useEffect(() => {
+  }, [hourlyStats, loadingHourly]);
 
   const options: ApexOptions = {
     chart: {
@@ -54,7 +57,7 @@ const Linechart = () => {
           fontWeight: 400
         },
       },
-      categories: hourlyStats.labels,
+      categories: hourlyStats?.labels || [],
     },
     markers: {
       size: 4.5,
@@ -85,42 +88,45 @@ const Linechart = () => {
   const series = [
     {
       name: "Nivel",
-      data: hourlyStats.values,
+      data: hourlyStats?.values || [],
     },
   ];
 
   useEffect(() => {
+    console.log('🔄 Fetching hourly stats...');
     fetchHourlyStats();
   }, [fetchHourlyStats]);
+
+  // 🔍 Verificar si hay datos antes de renderizar
+  const hasData = hourlyStats?.values && hourlyStats.values.length > 0;
 
   return (
     <>
       <Card variant="borderless" loading={loadingHourly}>
-        {
-          
-        }
-        {
-          hourlyStats.values.length === 0 ?
-            <Flex justify="center" align="center" style={{ height: "100%", width: "100%" }} vertical>
-              <Empty description="No hay datos del día disponibles" />
-            </Flex>
-            :
-            <>
-              <Typography.Title level={5}>Niveles de ruido</Typography.Title>
-              <Typography.Paragraph type="secondary">
-                Promedio de ruido en la últimas 24 horas
-              </Typography.Paragraph>
-              <ReactApexChart
-                options={options}
-                series={series}
-                type="line"
-                width={"100%"}
-                height={350}
-              />
-            </>
-        }
+        {!hasData ? (
+          <Flex justify="center" align="center" style={{ height: "100%", width: "100%" }} vertical>
+            <Empty description="No hay datos del día disponibles" />
+            {/* 🔍 Debug info */}
+            <Typography.Text type="secondary" style={{ marginTop: 8, fontSize: '12px' }}>
+              Debug: labels={hourlyStats?.labels?.length || 0}, values={hourlyStats?.values?.length || 0}
+            </Typography.Text>
+          </Flex>
+        ) : (
+          <>
+            <Typography.Title level={5}>Niveles de ruido</Typography.Title>
+            <Typography.Paragraph type="secondary">
+              Promedio de ruido en las últimas 24 horas
+            </Typography.Paragraph>
+            <ReactApexChart
+              options={options}
+              series={series}
+              type="line"
+              width={"100%"}
+              height={350}
+            />
+          </>
+        )}
       </Card>
-
     </>
   )
 }

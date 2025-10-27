@@ -70,3 +70,33 @@ export const monitorService = {
   },
 
 };
+
+export const setThreshold = async (ip: string, threshold: number) => {
+  try {
+    // 1. Primero actualizar el ESP
+    const espResponse = await fetch(`http://${ip}/threshold`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ threshold })
+    });
+
+    if (!espResponse.ok) {
+      throw new Error(`ESP Error: ${espResponse.status}`);
+    }
+
+    // 2. NUEVO: Actualizar la base de datos
+    const backendResponse = await api.patch('/sensor-devices/threshold', {
+      ip,
+      threshold
+    });
+
+    console.log('✅ Threshold saved to both ESP and database');
+    return backendResponse.data;
+
+  } catch (error) {
+    console.error('❌ Error in setThreshold:', error);
+    throw error;
+  }
+};

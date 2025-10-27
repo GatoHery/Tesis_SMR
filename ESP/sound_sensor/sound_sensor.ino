@@ -17,16 +17,19 @@ unsigned long lastDetectionTime  = 0;           // Tiempo de última detección
 const unsigned long RESET_INTERVAL   = 30000;   // 30s para reiniciar contador
 
 // Configuración de red estática
-IPAddress local_IP(192, 168, 1, 37);
+IPAddress local_IP(192, 168, 137, 1);
 IPAddress gateway(  192, 168, 1, 1);
 IPAddress subnet(   255, 255, 255, 0);
 
-const char* ip             = "192.168.1.37";    // UID = IP
-const char* ssid           = "INSERT_COIN2.4";
-const char* password       = "";
-const char* serverUrl      = "http://192.168.1.5:5050/api/sound-detection/";
-const char* reportUrl      = "http://192.168.1.5:5050/api/sensor-devices";
-const char* sensorLocation = "Laboratorio 5";
+//const char* ip             = "10.40.7.133";    // UID = IP
+const char* ip             = "192.168.137.1";    // UID = IP
+const char* ssid           = "bumblebee";
+const char* password       = "d50m7444";
+//const char* serverUrl      = "http://10.40.7.133:5050/api/sound-detection/";
+//const char* reportUrl      = "http://10.40.7.133:5050/api/sensor-devices";
+const char* serverUrl      = "http://192.168.137.1:5050/api/sound-detection/";
+const char* reportUrl      = "http://192.168.137.1:5050/api/sensor-devices";
+const char* sensorLocation = "Laboratorio 3";
 const char* sensorName     = "Sensor 2";
 
 // Estados configurables

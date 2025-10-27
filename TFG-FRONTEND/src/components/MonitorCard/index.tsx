@@ -1,7 +1,7 @@
 import { Button, Card, Col, Divider, Flex, Slider, Switch, Typography } from "antd"
 import { CheckOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSensorStore from "@/store/sensor.store";
 
 type MonitorCardProps = {
@@ -45,11 +45,6 @@ const HeaderSection = ({ name, description }: { name: string, description: strin
       <Typography.Title level={5}>{name}</Typography.Title>
       <Typography.Paragraph type="secondary">{description}</Typography.Paragraph>
     </div>
-    {/* <Button
-      icon={<MoreOutlined style={{ fontSize: "20px" }} />}
-      shape="circle"
-      type="text"
-    /> */}
   </Flex>
 );
 
@@ -61,10 +56,21 @@ const SensorCardContent = ({
   alarm,
   threshold
 }: Partial<MonitorCardProps>) => {
-  const [currentThreshold, setCurrentThreshold] = useState(threshold);
-  const [newThreshold, setNewThreshold] = useState(threshold);
-  const hasChanged = useMemo(() => currentThreshold !== newThreshold, [currentThreshold, newThreshold]);
-  const { isAlarmSetting, isNotificationSetting, isThresholdSetting, setAlarm, setNotifications, setThreshold } = useSensorStore();
+  // 🔧 FIX: Usar solo un estado para el threshold actual
+  const [localThreshold, setLocalThreshold] = useState(threshold || 50);
+  const { isThresholdSetting, setAlarm, setNotifications, setThreshold } = useSensorStore();
+
+  // 🔧 FIX: Sincronizar cuando cambie el threshold desde el store
+  useEffect(() => {
+    if (threshold !== undefined) {
+      setLocalThreshold(threshold);
+    }
+  }, [threshold]);
+
+  // 🔧 FIX: Determinar si hay cambios pendientes
+  const hasChanges = useMemo(() => {
+    return localThreshold !== threshold;
+  }, [localThreshold, threshold]);
 
   const handleConfirm = async () => {
     if (!ip) {
@@ -72,14 +78,17 @@ const SensorCardContent = ({
       return;
     }
 
-    if (!currentThreshold) {
-      toast.info("Threshold no existe...");
-      return;
+    console.log(`🔄 Actualizando threshold: ${threshold} → ${localThreshold}`);
+    
+    try {
+      await setThreshold(ip, localThreshold);
+      toast.success(`Umbral actualizado: ${localThreshold} dB`);
+    } catch (error) {
+      console.error('❌ Error updating threshold:', error);
+      toast.error("Error al actualizar el umbral");
+      // Revertir el cambio local en caso de error
+      setLocalThreshold(threshold || 50);
     }
-
-    await setThreshold(ip, currentThreshold);
-    setNewThreshold(currentThreshold);
-    toast.success(`Umbral actualizado: ${currentThreshold} dB`);
   };
 
   const handleAlarm = async (value: boolean) => {
@@ -114,40 +123,40 @@ const SensorCardContent = ({
       <Flex vertical gap={6}>
         <Flex justify="space-between" align="center">
           <Typography.Text type="secondary">Alarma:</Typography.Text>
-          <Switch value={alarm} onChange={(value) => handleAlarm(value)} loading={isAlarmSetting} />
+          <Switch value={alarm} onChange={(value) => handleAlarm(value)} />
         </Flex>
         <Flex justify="space-between" align="center">
           <Typography.Text type="secondary">Notificaciones:</Typography.Text>
-          <Switch value={notifications} onChange={(value) => handleNotifications(value)} loading={isNotificationSetting} />
+          <Switch value={notifications} onChange={(value) => handleNotifications(value)} />
         </Flex>
 
-        <InfoRow label="Umbral" value={`${threshold ? `${hasChanged ? currentThreshold : threshold} dB` : "N/A"} `} />
+        <InfoRow 
+          label="Umbral" 
+          value={`${localThreshold} dB ${hasChanges ? '(modificado)' : ''}`} 
+        />
         <Flex align="center" gap={8} style={{ marginTop: 6 }}>
           <Slider
             min={0}
             max={150}
-            value={currentThreshold}
-            onChange={setCurrentThreshold}
+            value={localThreshold}
+            onChange={setLocalThreshold}
             style={{ flex: 1 }}
-            disabled={!threshold || isThresholdSetting}
+            disabled={isThresholdSetting}
           />
-          {
-            hasChanged && (
-              <Button
-                type="default"
-                size="small"
-                shape="circle"
-                variant="outlined"
-                icon={<CheckOutlined />}
-                onClick={handleConfirm}
-              />
-            )
-          }
+          {hasChanges && (
+            <Button
+              type="primary"
+              size="small"
+              shape="circle"
+              icon={<CheckOutlined />}
+              onClick={handleConfirm}
+              loading={isThresholdSetting}
+            />
+          )}
         </Flex>
       </Flex>
     </>
   )
-
 }
 
 const LocationCardContent = ({
