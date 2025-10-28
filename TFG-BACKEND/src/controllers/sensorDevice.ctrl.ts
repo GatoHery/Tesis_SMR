@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { fetchAllSensorDevices, updateSensorThresholdService, upsertSensorDeviceService } from '../services/sensorDevice.services';
+import { fetchAllSensorDevices, upsertSensorDeviceService } from '../services/sensorDevice.services';
 
 export const getAllSensorDevices = async (req: Request, res: Response) => {
   try {
@@ -45,46 +45,3 @@ export const upsertSensorDevice = async (req: Request, res: Response) => {
   }
 };
 
-export const updateSensorThreshold = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { ip, threshold } = req.body;
-
-    if (!ip || threshold === undefined) {
-      res.status(400).json({
-        status: 'error',
-        message: 'IP and threshold are required'
-      });
-      return;
-    }
-
-    const updatedSensor = await SensorDevice.findOneAndUpdate(
-      { ip: ip },
-      { 
-        threshold: threshold,
-        lastUpdated: new Date()
-      },
-      { new: true }
-    );
-
-    if (!updatedSensor) {
-      res.status(404).json({
-        status: 'error',
-        message: 'Sensor not found'
-      });
-      return;
-    }
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Threshold updated successfully',
-      data: updatedSensor
-    });
-
-  } catch (error) {
-    console.error('Error updating threshold:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Internal server error'
-    });
-  }
-};

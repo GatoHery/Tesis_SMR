@@ -23,8 +23,8 @@ IPAddress subnet(   255, 255, 255, 0);
 
 //const char* ip             = "10.40.7.133";    // UID = IP
 const char* ip             = "192.168.137.1";    // UID = IP
-const char* ssid           = "bumblebee";
-const char* password       = "d50m7444";
+const char* ssid           = "LAPTOP-0PCANB8P 0657";
+const char* password       = "2*537Xz1";
 //const char* serverUrl      = "http://10.40.7.133:5050/api/sound-detection/";
 //const char* reportUrl      = "http://10.40.7.133:5050/api/sensor-devices";
 const char* serverUrl      = "http://192.168.137.1:5050/api/sound-detection/";

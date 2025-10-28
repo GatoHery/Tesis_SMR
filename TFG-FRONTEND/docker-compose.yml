@@ -2,10 +2,10 @@ version: "3.8"
 
 services:
   web:
-    build:
+    build: .
     ports:
       - "5173:5173"
-    volumes: 
+    volumes:
       - .:/app
       - /app/node_modules
     environment:
