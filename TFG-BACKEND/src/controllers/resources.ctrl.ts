@@ -2,20 +2,7 @@ import { Request, Response } from "express";
 
 import { fetchResources } from "../services/resources.services";
 import { WebSocket, Server as WebSocketServer } from "ws";
-
-/* Función para emitir datos por WebSocket */
-const broadcastData = (ws: WebSocketServer, eventType: string, data: any) => {
-  ws.clients.forEach((client) => {
-    if (client.readyState === client.OPEN) {
-      client.send(
-        JSON.stringify({
-          type: eventType,
-          data,
-        })
-      );
-    }
-  });
-};
+import { broadcastData } from "../utils/websocketConnection";
 
 export const getAllResources = async (req: Request, res: Response) => {
   const ws = req.app.get("ws") as WebSocketServer;

@@ -3,20 +3,7 @@ import { fetchReservations } from "../services/reservation.services";
 import { title } from "process";
 import { getWeekRange } from "../utils/date";
 import { WebSocket, Server as WebSocketServer } from "ws";
-
-/* Función para emitir datos por WebSocket */
-const broadcastData = (ws: WebSocketServer, eventType: string, data: any) => {
-  ws.clients.forEach((client) => {
-    if (client.readyState === client.OPEN) {
-      client.send(
-        JSON.stringify({
-          type: eventType,
-          data,
-        })
-      );
-    }
-  });
-};
+import { broadcastData } from "../utils/websocketConnection";
 
 export const getReservations = async (
   req: Request,

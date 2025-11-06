@@ -9,20 +9,7 @@ import { getTodayStartEnd } from "../utils/date";
 import { fetchReservations } from "../services/reservation.services";
 import { User } from "../models/user";
 import { WebSocket, Server as WebSocketServer } from "ws";
-
-/* Función para emitir datos por WebSocket */
-const broadcastData = (ws: WebSocketServer, eventType: string, data: any) => {
-  ws.clients.forEach((client) => {
-    if (client.readyState === client.OPEN) {
-      client.send(
-        JSON.stringify({
-          type: eventType,
-          data,
-        })
-      );
-    }
-  });
-};
+import { broadcastData } from "../utils/websocketConnection";
 
 export const getAllSounds = async (req: Request, res: Response) => {
   try {
