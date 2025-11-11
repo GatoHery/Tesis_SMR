@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 
 const Linechart = () => {
   const { darkMode } = useThemeStore();
-  const { hourlyStats, loadingHourly, fetchHourlyStats } = useDashboardStore();
+  const { hourlyStats, loadingHourly, fetchHourlyStats, initializeWebsocket } = useDashboardStore();
   const {
     token: { colorPrimary, colorError, colorBgContainer },
   } = theme.useToken();
@@ -95,7 +95,9 @@ const Linechart = () => {
   useEffect(() => {
     console.log('🔄 Fetching hourly stats...');
     fetchHourlyStats();
-  }, [fetchHourlyStats]);
+    const cleanup = initializeWebsocket();
+    return cleanup;
+  }, [fetchHourlyStats, initializeWebsocket]);
 
   // 🔍 Verificar si hay datos antes de renderizar
   const hasData = hourlyStats?.values && hourlyStats.values.length > 0;

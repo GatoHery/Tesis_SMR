@@ -20,7 +20,7 @@ const Overview = () => {
   const { token } = theme.useToken()
   const { darkMode } = useThemeStore();
   const { fetchAlerts } = useAlertStore();
-  const { metrics, fetchMetrics, loading } = useDashboardStore();
+  const { metrics, fetchMetrics, loading, initializeWebsocket } = useDashboardStore();
 
   const { Title, Paragraph } = Typography;
 
@@ -61,7 +61,9 @@ const Overview = () => {
   useEffect(() => {
     fetchAlerts();
     fetchMetrics();
-  }, [fetchAlerts, fetchMetrics]);
+    const cleanup = initializeWebsocket();
+    return cleanup;
+  }, [fetchAlerts, fetchMetrics, initializeWebsocket]);
 
   return (
     <>
