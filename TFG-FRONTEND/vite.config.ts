@@ -11,6 +11,7 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    allowedHosts: ['dei.uca.edu.sv']
   },
   resolve: {
     alias: {
