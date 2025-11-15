@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const url = "mongodb://mongo/ESP-back"; 
+const url = process.env.MONGODB_URI || `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_NAME}`;
 
 export const dbConnection = async (): Promise<void> => {
   try {
