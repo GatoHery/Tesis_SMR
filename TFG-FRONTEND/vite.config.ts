@@ -9,7 +9,8 @@ export default defineConfig({
     port: 5173,
     watch: {
       usePolling: true,
-    }
+    },
+    allowedHosts: ['dei.uca.edu.sv']
   },
   resolve: {
     alias: {
