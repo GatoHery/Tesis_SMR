@@ -6,12 +6,19 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true,
+    host: '0.0.0.0',
     port: 5173,
     watch: {
       usePolling: true,
     },
-    allowedHosts: ['dei.uca.edu.sv']
+    allowedHosts: ['dei.uca.edu.sv', 'localhost', '127.0.0.1'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5050',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   },
   resolve: {
     alias: {
