@@ -15,6 +15,11 @@ export default defineConfig({
         target: process.env.VITE_API_URL || 'http://backend:5050',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/dei-api': {
+        target: 'https://dei.uca.edu.sv',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/dei-api/, '')
       }
     }
   },
