@@ -14,7 +14,7 @@ export default defineConfig({
     allowedHosts: ['dei.uca.edu.sv', 'localhost', '127.0.0.1'],
     proxy: {
       '/api': {
-        target: 'http://localhost:5050',
+        target: process.env.VITE_API_URL || 'http://backend:5050',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
