@@ -11,7 +11,6 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
-    allowedHosts: ['dei.uca.edu.sv', 'localhost', '127.0.0.1'],
     proxy: {
       '/api': {
         target: process.env.VITE_API_URL || 'http://backend:5050',
