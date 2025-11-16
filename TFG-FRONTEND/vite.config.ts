@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    allowedHosts: ['dei.uca.edu.sv', 'localhost', '127.0.0.1']
   }
 })
