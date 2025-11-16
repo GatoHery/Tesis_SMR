@@ -1,15 +1,25 @@
-FROM node:23-slim
+FROM node:23-slim AS builder
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
-# Compila tu backend (solo si usas TypeScript)
 RUN npm run build
 
-EXPOSE 5050
+FROM node:23-slim
+tall --production
+WORKDIR /usr/src/app
 
-CMD ["node", "dist/main.js"]
+COPY package*.json ./
+
+
+
+
+
+
+
+
+CMD ["node", "dist/main.js"]EXPOSE 5050COPY --from=builder /usr/src/app/dist ./distRUN npm install --productionCMD ["node", "dist/main.js"]
