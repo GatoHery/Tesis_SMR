@@ -1,25 +1,14 @@
-FROM node:23-slim AS builder
+FROM node:23-slim
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm install
+RUN npm install   # instala tsc
 
 COPY . .
 
-RUN npm run build
+RUN npm run build   # funciona ahora
 
-FROM node:23-slim
-tall --production
-WORKDIR /usr/src/app
+EXPOSE 5050
 
-COPY package*.json ./
-
-
-
-
-
-
-
-
-CMD ["node", "dist/main.js"]EXPOSE 5050COPY --from=builder /usr/src/app/dist ./distRUN npm install --productionCMD ["node", "dist/main.js"]
+CMD ["node", "dist/main.js"]
