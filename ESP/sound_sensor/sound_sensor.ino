@@ -16,16 +16,19 @@ const int   DETECTION_LIMIT   = 3;              // Límite para activar (3 veces
 unsigned long lastDetectionTime  = 0;           // Tiempo de última detección
 const unsigned long RESET_INTERVAL   = 30000;   // 30s para reiniciar contador
 
-// Configuración de red estática - CORREGIR GATEWAY
-IPAddress local_IP(192, 168, 137, 100);
-IPAddress gateway(192, 168, 137, 1);    // Cambiar de 192.168.1.1 a 192.168.137.1
-IPAddress subnet(255, 255, 255, 0);
+// Configuración de red estática
+IPAddress local_IP(192, 168, 137, 1);
+IPAddress gateway(  192, 168, 1, 1);
+IPAddress subnet(   255, 255, 255, 0);
 
-const char* ip             = "192.168.137.100";    // Actualizar IP del ESP
+//const char* ip             = "10.40.7.133";    // UID = IP
+const char* ip             = "192.168.137.1";    // UID = IP
 const char* ssid           = "LAPTOP-0PCANB8P 0657";
 const char* password       = "2*537Xz1";
-const char* serverUrl      = "http://192.168.137.1:5050/api/sound-detection/";  // Backend en .1
-const char* reportUrl      = "http://192.168.137.1:5050/api/sensor-devices";    // Backend en .1
+//const char* serverUrl      = "http://10.40.7.133:5050/api/sound-detection/";
+//const char* reportUrl      = "http://10.40.7.133:5050/api/sensor-devices";
+const char* serverUrl      = "http://192.168.137.1:5050/api/sound-detection/";
+const char* reportUrl      = "http://192.168.137.1:5050/api/sensor-devices";
 const char* sensorLocation = "Laboratorio 3";
 const char* sensorName     = "Sensor 2";
 
@@ -79,58 +82,16 @@ void reportToBackend(float dB) {
 // Handlers WebServer
 // —————————————————————————————————————————————————————————————————————————————
 void handleSetThreshold() {
-  Serial.println("🔧 handleSetThreshold() llamado!");
-  Serial.printf("Método: %s\n", server.method() == HTTP_GET ? "GET" : "POST");
-  Serial.printf("URI: %s\n", server.uri().c_str());
-  Serial.printf("Args: %d\n", server.args());
-  
-  // Agregar headers CORS
-  server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
-  
-  // Mostrar todos los argumentos para debug
-  for (int i = 0; i < server.args(); i++) {
-    Serial.printf("Arg[%d]: %s = %s\n", i, server.argName(i).c_str(), server.arg(i).c_str());
-  }
-  
   if (server.hasArg("value")) {
     float v = server.arg("value").toFloat();
-    Serial.printf("🔍 Valor recibido: %s -> %.1f\n", server.arg("value").c_str(), v);
     if (v > 0) {
       THRESHOLD_DB = v;
       Serial.printf("✅ Umbral actualizado: %.1f dB\n", THRESHOLD_DB);
-      
-      // Respuesta JSON limpia y válida
-      String jsonResponse = "{";
-      jsonResponse += "\"success\":true,";
-      jsonResponse += "\"threshold\":" + String(THRESHOLD_DB, 1) + ",";
-      jsonResponse += "\"message\":\"Threshold actualizado correctamente\"";
-      jsonResponse += "}";
-      
-      server.send(200, "application/json", jsonResponse);
+      server.send(200, "text/plain", "Nuevo THRESHOLD_DB: " + String(THRESHOLD_DB));
       return;
-    } else {
-      Serial.println("❌ Valor inválido (debe ser > 0)");
     }
-  } else {
-    Serial.println("❌ Parámetro 'value' no encontrado");
   }
-  
-  String errorResponse = "{";
-  errorResponse += "\"success\":false,";
-  errorResponse += "\"error\":\"Parametro value faltante o invalido\"";
-  errorResponse += "}";
-  
-  server.send(400, "application/json", errorResponse);
-}
-
-// Agregar handler para OPTIONS (preflight CORS)
-void handleOptions() {
-  server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
-  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
-  server.send(200, "text/plain", "");
+  server.send(400, "text/plain", "Falta o valor inválido");
 }
 
 void handleSetAlarm() {
@@ -173,26 +134,12 @@ void setup() {
   }
   Serial.printf("\n✅ Conectado IP: %s\n", WiFi.localIP().toString().c_str());
 
-  // Rutas HTTP con CORS support
-  server.on("/set-threshold", HTTP_POST, handleSetThreshold);
-  server.on("/set-threshold", HTTP_GET, handleSetThreshold);
-  server.on("/set-threshold", HTTP_OPTIONS, handleOptions);  // Agregar OPTIONS
-  server.on("/set-alarm", HTTP_PATCH, handleSetAlarm);
-  server.on("/set-notification", HTTP_PATCH, handleSetNotification);
-  
-  // Agregar una ruta de prueba para verificar conectividad
-  server.on("/test", HTTP_GET, []() {
-    Serial.println("🧪 Endpoint /test llamado");
-    server.send(200, "text/plain", "ESP funcionando correctamente");
-  });
-  
+  // Rutas HTTP
+  server.on("/set-threshold",     HTTP_POST,  handleSetThreshold);
+  server.on("/set-alarm",         HTTP_PATCH, handleSetAlarm);
+  server.on("/set-notification",  HTTP_PATCH, handleSetNotification);
   server.begin();
   Serial.println("🌐 Servidor web iniciado.");
-  Serial.printf("📍 Rutas disponibles:\n");
-  Serial.printf("  GET/POST /set-threshold?value=X\n");
-  Serial.printf("  PATCH /set-alarm\n");
-  Serial.printf("  PATCH /set-notification\n");
-  Serial.printf("  GET /test\n");
 }
 
 // —————————————————————————————————————————————————————————————————————————————
