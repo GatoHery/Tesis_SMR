@@ -28,9 +28,23 @@ const useSensorStore = create<SensorState>()((set) => ({
   fetchSensors: async () => {
     try {
       const data = await monitorService.fetchSensors();
-
+      const transformed: Sensor[] = (data as any[]).map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        location: item.location,
+        maxParticipants: item.maxParticipants,
+        alarm: item.alarm,
+        createdAt: item.createdAt,
+        currentReading: item.currentReading,
+        ip: item.ip,
+        notifications: item.notifications,
+        threshold: item.threshold,
+        updatedAt: item.updatedAt,
+        uid: item.uid, // Add the required uid property
+        // Add any other required properties from Sensor type here
+      }));
       set({
-        sensors: data,
+        sensors: transformed,
         loading: false,
         error: null,
       });

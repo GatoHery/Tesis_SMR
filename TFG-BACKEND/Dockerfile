@@ -1,17 +1,21 @@
-FROM node:23-slim
+# Etapa 1: Build
+FROM node:23-slim AS builder
 
-RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-
-# Create the uploads directory
-RUN mkdir -p /usr/src/app/uploads
-
 COPY package*.json ./
-
 RUN npm install
-
 COPY . .
 
-EXPOSE 5050
+# Compilar TypeScript
+RUN npm run build
 
-CMD ["npm", "run", "dev"]
+# Etapa 2: Producción
+FROM node:23-slim
+
+WORKDIR /usr/src/app
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/package*.json ./
+RUN npm install --omit=dev
+
+EXPOSE 5050
+CMD ["node", "dist/index.js"]

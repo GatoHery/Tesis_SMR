@@ -19,9 +19,15 @@ const useResourceStore = create<ResourceState>()((set) => ({
   fetchResources: async () => {
     try {
       const data = await monitorService.fetchResources();
+      const transformed: Resource[] = (data as any[]).map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        location: item.location,
+        maxParticipants: item.maxParticipants,
+      }));
 
       set({
-        resources: data,
+        resources: transformed,
         loading: false,
         error: null,
       });

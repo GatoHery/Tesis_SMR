@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { fetchReservations } from "../services/reservation.services";
 import { title } from "process";
 import { getWeekRange } from "../utils/date";
-import { WebSocket, Server as WebSocketServer } from "ws";
+import { Server as SocketIOServer } from "socket.io";
 import { broadcastData } from "../utils/websocketConnection";
 
 export const getReservations = async (
@@ -12,11 +12,11 @@ export const getReservations = async (
   try {
     const { startDateTime, endDateTime } = req.query;
 
-    const ws = req.app.get("ws") as WebSocketServer;
+    const io = req.app.get("io") as SocketIOServer;
 
     if (!startDateTime || !endDateTime) {
       res.status(400).json({ message: "Missing date parameters" });
-      broadcastData(ws, "MisingDateParameters", {
+      broadcastData(io, "MisingDateParameters", {
         message: "Missing date parameters",
       });
       return;
@@ -38,7 +38,7 @@ export const getReservations = async (
     );
 
     res.status(200).json(simplifiedReservations);
-    broadcastData(ws, "fetchedReservations", simplifiedReservations);
+    broadcastData(io, "fetchedReservations", simplifiedReservations);
   } catch (error) {
     console.error("Error getting reservations:", error);
     res.status(500).json({ message: "Error getting reservations" });
@@ -46,7 +46,7 @@ export const getReservations = async (
 };
 
 export const getWeeklySummary = async (_: Request, res: Response) => {
-  const ws = _.app.get("ws") as WebSocketServer;
+  const io = _.app.get("io") as SocketIOServer;
 
   try {
     const today = new Date();
@@ -83,7 +83,7 @@ export const getWeeklySummary = async (_: Request, res: Response) => {
       perc: percentChange !== null ? Number(percentChange.toFixed(2)) : null,
     };
 
-    broadcastData(ws, "weeklySummary", objectSummary);
+    broadcastData(io, "weeklySummary", objectSummary);
   } catch (error) {
     console.error("Error computing weekly summary:", error);
     res.status(500).json({ message: "Error computing weekly summary" });

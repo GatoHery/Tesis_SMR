@@ -4,7 +4,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { dbConnection } from "../database/config";
-import { Server as WebSocketServer } from "ws";
+import { Server as SocketIOServer, Socket } from "socket.io";
 import http from "http";
 import {
   authRoutes,
@@ -24,18 +24,8 @@ dotenv.config();
 class Server {
   private app: Application;
   private server: http.Server;
-  private ws: WebSocketServer;
+  private io: SocketIOServer;
   private port: string | undefined;
-
-  private startPingInterval() {
-    setInterval(() => {
-      this.ws.clients.forEach((client) => {
-        if (client.readyState === client.OPEN) {
-          client.ping();
-        }
-      });
-    }, 150000);
-  }
 
   // paths declarations
   public authPath: string;
@@ -55,12 +45,16 @@ class Server {
     this.server = http.createServer(this.app);
 
     /* Create Websocket server */
-    this.ws = new WebSocketServer({ server: this.server });
+    this.io = new SocketIOServer(this.server, {
+      cors: {
+        origin: process.env.FRONTEND_URL || "http://localhost:8080",
+        methods: ["GET", "POST"],
+        credentials: true,
+      },
+    });
 
     /* inicializando webSocket */
-    this.initializeWebSocket();
-
-    this.startPingInterval();
+    this.initializeSocketIO();
 
     this.authPath = "/api/auth";
     this.dashboardPath = "/api/dashboard";
@@ -71,31 +65,24 @@ class Server {
     this.soundDetectionPath = "/api/sound-detection";
     this.userPath = "/api/users";
 
-    this.app.set("ws", this.ws);
+    this.app.set("socket: Socket", this.io);
 
     this.connectingDatabase();
     this.middlewares();
     this.routes();
   }
 
-  private initializeWebSocket() {
-    this.ws.on("connection", (ws) => {
-      console.log("New client connected");
+  private initializeSocketIO() {
+    this.io.on("connection", (socket: Socket) => {
+      console.log("🔌 New client connected");
 
-      // Mover el manejo de mensajes dentro del callback de connection
-      ws.on("message", (message) => {
-        console.log("Received: ", message);
-
-        // Broadcast dentro del callback de message
-        this.ws.clients.forEach((client) => {
-          if (client !== ws) {
-            client.send(message.toString()); // Convertir el mensaje a string
-          }
-        });
+      socket.on("message", (msg) => {
+        console.log("📨 Received:", msg);
+        socket.broadcast.emit("message", msg);
       });
 
-      ws.on("close", () => {
-        console.log("Client disconnected");
+      socket.on("disconnect", () => {
+        console.log("❌ Client disconnected");
       });
     });
   }

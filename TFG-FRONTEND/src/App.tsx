@@ -2,11 +2,11 @@
 import { useEffect } from "react";
 
 // ** Third Party Immports
-import { ConfigProvider, theme } from "antd"
-import { useNavigate } from "react-router"
+import { ConfigProvider, theme } from "antd";
+import { useNavigate } from "react-router-dom";
 
 // ** Router Imports
-import Router from "@/routes/router"
+import Router from "@/routes/router";
 
 // ** Zustand Store Imports
 import useThemeStore from "@/store/theme.store";
@@ -34,15 +34,15 @@ function App() {
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
           colorPrimary: "#0064bd",
-          colorBgContainer: darkMode ? '#26272e' : '#ffffff',
-          colorBgLayout: darkMode ? '#17191a' : '#fafafa',
-        }
+          colorBgContainer: darkMode ? "#26272e" : "#ffffff",
+          colorBgLayout: darkMode ? "#17191a" : "#fafafa",
+        },
       }}
     >
       <Router />
       <ToastContainer />
     </ConfigProvider>
-  )
+  );
 }
 
-export default App
+export default App;

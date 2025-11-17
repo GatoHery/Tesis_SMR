@@ -1,15 +1,10 @@
-import { WebSocket, Server as WebSocketServer } from "ws";
+import { Server as SocketIOServer } from "socket.io";
 
 /* Función para emitir datos por WebSocket */
-export const broadcastData = (ws: WebSocketServer, eventType: string, data: any) => {
-  ws.clients.forEach((client) => {
-    if (client.readyState === client.OPEN) {
-      client.send(
-        JSON.stringify({
-          type: eventType,
-          data,
-        })
-      );
-    }
-  });
+export const broadcastData = (
+  io: SocketIOServer,
+  eventType: string,
+  data: any
+) => {
+  io.emit(eventType, data);
 };

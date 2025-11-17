@@ -3,15 +3,15 @@ import {
   fetchAllSensorDevices,
   upsertSensorDeviceService,
 } from "../services/sensorDevice.services";
-import { WebSocket, Server as WebSocketServer } from "ws";
+import { Server as SocketIOServer } from "socket.io";
 import { broadcastData } from "../utils/websocketConnection";
 
 export const getAllSensorDevices = async (req: Request, res: Response) => {
   try {
-    const ws = req.app.get("ws") as WebSocketServer;
+    const io = req.app.get("io") as SocketIOServer;
     const sensorDevices = await fetchAllSensorDevices();
     res.status(200).json(sensorDevices);
-    broadcastData(ws, "fetchedSensorDevices", sensorDevices);
+    broadcastData(io, "fetchedSensorDevices", sensorDevices);
   } catch (error) {
     console.error("Error fetching sensor devices:", error);
     res.status(500).json({ message: "Error fetching sensor devices" });
@@ -19,7 +19,7 @@ export const getAllSensorDevices = async (req: Request, res: Response) => {
 };
 
 export const upsertSensorDevice = async (req: Request, res: Response) => {
-  const ws = req.app.get("ws") as WebSocketServer;
+  const io = req.app.get("io") as SocketIOServer;
 
   try {
     const {
@@ -34,7 +34,7 @@ export const upsertSensorDevice = async (req: Request, res: Response) => {
 
     if (!ip) {
       res.status(400).json({ message: "IP is required as uid" });
-      broadcastData(ws, "UpsertSensorDeviceError", {
+      broadcastData(io, "UpsertSensorDeviceError", {
         message: "IP is required as uid",
       });
       return;
@@ -51,7 +51,7 @@ export const upsertSensorDevice = async (req: Request, res: Response) => {
     });
 
     res.status(200).json(updated);
-    broadcastData(ws, "upsertedSensorDevice", updated);
+    broadcastData(io, "upsertedSensorDevice", updated);
   } catch (error) {
     console.error("Error upserting sensor device:", error);
     res.status(500).json({ message: "Error upserting sensor device" });

@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mongo:
     container_name: mongo_db
@@ -5,11 +7,11 @@ services:
     restart: always
     ports:
       - "27017:27017"
-    #volumes:
-    #  - mongodb_data:/data/db
- 
+    volumes:
+      - mongodb_data:/data/db
+
   app:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: admin-back
@@ -20,8 +22,6 @@ services:
       - mongo
     env_file:
       - .env
-    #volumes:
-    #  - .:/usr/src/app
 
   seed:
     build:
@@ -39,4 +39,3 @@ services:
 
 volumes:
   mongodb_data:
-  
