@@ -18,6 +18,8 @@ import {
 } from "../routes";
 import passport from "passport";
 import "../config/passport";
+import { broadcastData } from "../utils/websocketConnection";
+import { dashbordEmitter } from "../emitters/dashboard.emitter";
 
 dotenv.config();
 
@@ -48,8 +50,9 @@ class Server {
     this.io = new SocketIOServer(this.server, {
       cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:8080",
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"],
       },
     });
 
@@ -78,7 +81,7 @@ class Server {
 
       socket.on("message", (msg) => {
         console.log("📨 Received:", msg);
-        socket.broadcast.emit("message", msg);
+        broadcastData(this.io, "message", msg);
       });
 
       socket.on("disconnect", () => {
@@ -120,6 +123,7 @@ class Server {
   listen() {
     this.server.listen(this.port, () => {
       console.log(`🚀 Server running on port ${this.port}`);
+      dashbordEmitter(this.io);
     });
   }
 }
