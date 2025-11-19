@@ -2,6 +2,7 @@ import { Reservation, ReservationStats } from "@/types/reservation.type";
 import { reservationService } from "@/services/reservation.service";
 import { create } from "zustand";
 import { Dayjs } from "dayjs";
+import socket from "@/services/socket.client";
 
 type ReservationState = {
   reservations: Reservation[];
@@ -11,56 +12,81 @@ type ReservationState = {
   error: string | null;
   fetchReservations: (from: Dayjs, to: Dayjs) => Promise<void>;
   fetchReservationsStats: () => Promise<void>;
-}
+  initializeWebsocket: () => void;
+};
 
 const initialStats: ReservationStats = {
   currentCount: 0,
   previousCount: 0,
   difference: 0,
   percentChange: 0,
-}
+};
 
+const useReservationStore = create<ReservationState>()((set) => ({
+  reservations: [],
+  stats: initialStats,
+  loading: false,
+  loadingStats: false,
+  error: null,
 
-const useReservationStore = create<ReservationState>()(
-  (set) => ({
-    reservations: [],
-    stats: initialStats,
-    loading: false,
-    loadingStats: false,
-    error: null,
+  fetchReservations: async (from, to) => {
+    try {
+      set({ loading: true });
+      const data = await reservationService.fetchReservations(
+        from.toISOString(),
+        to.toISOString()
+      );
 
-    fetchReservations: async (from, to) => {
-      try {
-        set({ loading: true });
-        const data = await reservationService.fetchReservations(from.toISOString(), to.toISOString());
+      set({
+        reservations: data,
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      console.error("Error fetching alerts: ", error);
+      set({ loading: false, error: "Failed to fetch alerts..." });
+    }
+  },
 
-        set({
-          reservations: data,
-          loading: false,
-          error: null,
-        });
-      } catch (error) {
-        console.error("Error fetching alerts: ", error);
-        set({ loading: false, error: "Failed to fetch alerts..." });
-      }
-    },
+  fetchReservationsStats: async () => {
+    try {
+      set({ loadingStats: true });
+      const data = await reservationService.fetchReservationsStats();
 
-    fetchReservationsStats: async () => {
-      try {
-        set({ loadingStats: true });
-        const data = await reservationService.fetchReservationsStats();
+      set({
+        stats: data,
+        loadingStats: false,
+        error: null,
+      });
+    } catch (error) {
+      console.error("Error fetching reservations stats: ", error);
+      set({
+        loadingStats: false,
+        error: "Failed to fetch reservations stats...",
+      });
+    }
+  },
 
-        set({
-          stats: data,
-          loadingStats: false,
-          error: null,
-        });
-      } catch (error) {
-        console.error("Error fetching reservations stats: ", error);
-        set({ loadingStats: false, error: "Failed to fetch reservations stats..." });
-      }
-    },
-  })
-);
+  initializeWebsocket: () => {
+    socket.on("fetchedReservations", (data: Reservation[]) => {
+      set({ reservations: data });
+    });
+
+    socket.on("weeklySummary", (data: ReservationStats) => {
+      set({ stats: data });
+    });
+
+    socket.on("fetchedReservationsError", (err: any) => {
+      set({ error: "Error fetching reservations" });
+      console.error(err);
+    });
+
+    return () => {
+      socket.off("fetchedReservations");
+      socket.off("weeklySummary");
+      socket.off("fetchedReservationsError");
+    };
+  },
+}));
 
 export default useReservationStore;
