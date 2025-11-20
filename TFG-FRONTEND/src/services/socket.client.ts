@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 const socket = io(
   process.env.VITE_BASE_URL || "https://dei.uca.edu.sv",
   {
-    path: "/alarma/socket.io",
+    path: "/alarma/api/socket.io",
     transports: ["websocket"],
     withCredentials: true,
   }
