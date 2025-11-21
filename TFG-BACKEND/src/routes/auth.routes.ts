@@ -10,7 +10,7 @@ import { validateFields } from '../middlewares/validator'
 import passport from 'passport'
 import { checkSession } from '../middlewares/session'
 
-const router = Router()
+const router = Router() 
 
 // login
 router.post(
