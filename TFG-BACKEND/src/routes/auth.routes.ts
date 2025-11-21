@@ -25,14 +25,14 @@ router.post(
 )
 
 // Login con Google
-router.get('/google', passport.authenticate('auth-google', { scope: ['profile', 'email'] }))
+router.post('/google', googleLogin)
 
 router.get('/microsoft', passport.authenticate('auth-microsoft'))
 
 router.get(
-  '/google/callback',
-  passport.authenticate('auth-google', { session: false }),
-  googleLogin // or a dedicated googleCallback controller if you have one
+  '/microsoft/callback',
+  passport.authenticate('auth-microsoft', { session: false }),
+  microsoftCallback
 )
 
 // Who am I
