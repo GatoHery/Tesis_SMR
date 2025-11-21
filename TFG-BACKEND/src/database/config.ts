@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const url = process.env.MONGODB_URI || `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_NAME}`;
+const url = process.env.MONGO_URL || "mongodb://mongo_db_alarma/ESP-back";
 
 export const dbConnection = async (): Promise<void> => {
   try {

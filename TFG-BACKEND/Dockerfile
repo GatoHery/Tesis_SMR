@@ -13,9 +13,8 @@ RUN npm run build
 FROM node:23-slim
 
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/package*.json ./
-RUN npm install --omit=dev
+COPY --from=builder /usr/src/app .
+RUN npm install
 
 EXPOSE 5050
 CMD ["node", "dist/index.js"]
