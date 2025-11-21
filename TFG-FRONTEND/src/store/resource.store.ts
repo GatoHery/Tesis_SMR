@@ -1,10 +1,10 @@
 import { monitorService } from "@/services/monitor.service";
-import { ResourceItem } from "@/types/monitor.type";
+import { Resource } from "@/types/monitor.type";
 import { create } from "zustand";
 import socket from "@/services/socket.client";
 
 type ResourceState = {
-  resources: ResourceItem[];
+  resources: Resource[];
   loading: boolean;
   error: string | null;
   fetchResources: () => Promise<void>;

@@ -1,10 +1,10 @@
 import { monitorService } from "@/services/monitor.service";
-import { SensorData } from "@/types/monitor.type";
+import { Sensor } from "@/types/monitor.type";
 import { create } from "zustand";
 import socket from "@/services/socket.client";
 
 type SensorState = {
-  sensors: SensorData[];
+  sensors: Sensor[];
   loading: boolean;
   isAlarmSetting: boolean;
   isNotificationSetting: boolean;

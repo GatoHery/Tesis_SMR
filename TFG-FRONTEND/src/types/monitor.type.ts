@@ -1,24 +1,3 @@
-export interface SensorDevice {
-  ip: string;
-  name: string;
-  threshold: number;
-  isReal: boolean;
-}
-
-export interface ResourceItem {
-  device?: SensorDevice | null;
-  [key: string]: unknown;
-}
-
-export interface SensorData {
-  ip?: string;
-  name?: string;
-  threshold?: number;
-  isReal?: boolean;
-  [key: string]: unknown;
-}
-
-// Interfaces antiguas (compatibilidad)
 export interface Resource {
   id: number;
   name: string;
