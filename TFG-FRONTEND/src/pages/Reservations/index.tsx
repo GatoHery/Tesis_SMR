@@ -93,16 +93,16 @@ const Reservations = () => {
   ];
 
   useEffect(() => {
+    initializeWebsocket();
+  }, []);
+
+  useEffect(() => {
     fetchReservations(range[0].startOf("day"), range[1].endOf("day"));
-    const cleanup = initializeWebsocket();
-    return cleanup;
-  }, [range, fetchReservations, initializeWebsocket]);
+  }, [range, fetchReservations]);
 
   useEffect(() => {
     fetchReservationsStats();
-    const cleanup = initializeWebsocket();
-    return cleanup;
-  }, [fetchReservationsStats, initializeWebsocket]);
+  }, [fetchReservationsStats]);
 
   return (
     <Flex vertical gap={24}>

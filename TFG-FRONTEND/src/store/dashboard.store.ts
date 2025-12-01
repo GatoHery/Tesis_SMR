@@ -98,29 +98,26 @@ const useDashboardStore = create<AlertState>()((set) => ({
   },
 
   initializeWebsocket: () => {
-    socket.on("dashboardMetrics", (data: Metrics) => {
+    socket.off("dashboardMetrics");
+    socket.off("hourlyAverages");
+    socket.off("weeklyAverages");
+
+    socket.on("dashboard metrics", (data: Metrics) => {
       set({ metrics: data });
     });
 
-    socket.on("hourlyAverages", (data: GrahpsData) => {
+    socket.on("hourly averages", (data: GrahpsData) => {
       set({ hourlyStats: data });
     });
 
-    socket.on("weeklyLocationAverages", (data: GrahpsData) => {
+    socket.on("weekly location averages", (data: GrahpsData) => {
       set({ weeklyAverages: data });
     });
 
-    socket.on("dashboardMetricsError", (err: any) => {
+    /* socket.on("dashboardMetricsError", (err: any) => {
       set({ error: "Error in dashboard metrics Websocket" });
       console.error(err);
-    });
-
-    return () => {
-      socket.off("dashboardMetrics");
-      socket.off("hourlyAverages");
-      socket.off("weeklyAverages");
-      socket.off("dashboardMetricsError");
-    };
+    }); */
   },
 }));
 

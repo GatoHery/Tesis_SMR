@@ -4,22 +4,39 @@ import {
   getDashboardMetrics,
   getWeeklyLocationAverages,
 } from "../services/dashboard.services";
-import { broadcastData } from "../utils/websocketConnection";
 
-export function dashbordEmitter(io: SocketIOServer, intervalMs = 10000) {
-  setInterval(async () => {
-    try {
-      const metrics = await getDashboardMetrics();
-      broadcastData(io, "dashboardMetrics", metrics);
-
-      const hourly = await get3hAverages();
-      broadcastData(io, "hourlyAverages", hourly);
-
-      const weekly = await getWeeklyLocationAverages();
-      broadcastData(io, "weeklyLocationAverages", weekly);  
-    } catch (error) {
-      console.error("Error emitting dashboard data: ", error);
-      io.emit("dashboardMetricsError", error);
-    }
-  }, intervalMs);
-}
+export const dashboardEmitter = {
+  emitDashboardData: async (io: SocketIOServer, intervalMs = 10000) => {
+    const metrics = await getDashboardMetrics();
+    setInterval(() => {
+      try {
+        io.emit("dashboard metrics", metrics);
+      } catch (error) {
+        console.error("Error emitting dashboard data: ", error);
+        io.emit("dashboardMetricsError", error);
+      }
+    }, intervalMs);
+  },
+  emitHourlyAverages: async (io: SocketIOServer, intervalMs = 10000) => {
+    const hourly = await get3hAverages();
+    setInterval(() => {
+      try {
+        io.emit("hourly averages", hourly);
+      } catch (error) {
+        console.error("Error emitting hourly averages: ", error);
+        io.emit("hourlyAveragesError", error);
+      }
+    }, intervalMs);
+  },
+  emitWeeklyLocationAverages: (io: SocketIOServer, intervalMs = 10000) => {
+    setInterval(async () => {
+      try {
+        const weekly = await getWeeklyLocationAverages();
+        io.emit("weekly location averages", weekly);
+      } catch (error) {
+        console.error("Error emitting hourly averages: ", error);
+        io.emit("hourlyAveragesError", error);
+      }
+    }, intervalMs);
+  },
+};

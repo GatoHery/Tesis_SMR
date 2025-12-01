@@ -38,13 +38,10 @@ const useResourceStore = create<ResourceState>()((set) => ({
   },
 
   initializeWebsocket: () => {
-    socket.on("simplifiedResources", (data: Resource[]) => {
+    socket.off("simplified resources");
+    socket.on("simplified resources", (data: Resource[]) => {
       set({ resources: data });
     });
-
-    return () => {
-      socket.off("simplifiedResources");
-    };
   },
 }));
 

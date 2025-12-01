@@ -10,8 +10,7 @@ const Sensors = () => {
 
   useEffect(() => {
     fetchSensors();
-    const cleanup = initializeWebsocket();
-    return cleanup;
+    initializeWebsocket();
   }, [fetchSensors]);
 
   return (
@@ -66,8 +65,7 @@ const Locations = () => {
 
   useEffect(() => {
     fetchResources();
-    const cleanup = initializeWebsocket();
-    return cleanup;
+    initializeWebsocket();
   }, [fetchResources]);
 
   return (

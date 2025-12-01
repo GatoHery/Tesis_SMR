@@ -8,15 +8,11 @@ import { sendEmail } from "../utils/email";
 import { getTodayStartEnd } from "../utils/date";
 import { fetchReservations } from "../services/reservation.services";
 import { User } from "../models/user";
-import { Server as SocketIOServer } from "socket.io";
-import { broadcastData } from "../utils/websocketConnection";
 
 export const getAllSounds = async (req: Request, res: Response) => {
   try {
-    const io = req.app.get("io") as SocketIOServer;
     const sounds = await fetchAllSounds();
     res.status(200).json(sounds);
-    broadcastData(io, "getSounds", sounds);
   } catch (error) {
     console.error("Error fetching sounds:", error);
     res.status(500).json({ message: "Error fetching sounds" });
@@ -27,9 +23,8 @@ export const getSoundById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const sound = await fetchSoundById(id);
-    const io = req.app.get("io") as SocketIOServer;
+
     res.status(200).json(sound);
-    broadcastData(io, "getSoundById", sound);
   } catch (error) {
     console.error("Error fetching sound:", error);
     res.status(500).json({ message: "Error fetching sound" });
@@ -37,8 +32,6 @@ export const getSoundById = async (req: Request, res: Response) => {
 };
 
 export const postSound = async (req: Request, res: Response): Promise<void> => {
-  const io = req.app.get("io") as SocketIOServer;
-
   try {
     const alertUsers = await User.find({ receiveAlerts: true });
     console.log("👥 Users with alerts enabled:", alertUsers.length);
@@ -63,9 +56,6 @@ export const postSound = async (req: Request, res: Response): Promise<void> => {
         triggerBuzzer: false,
         message: "Detection count is less than 3, no action taken.",
       });
-      broadcastData(io, "soundIgnored", {
-        message: "Detection count is less than 3, no action taken.",
-      });
 
       return;
     }
@@ -88,9 +78,7 @@ export const postSound = async (req: Request, res: Response): Promise<void> => {
         triggerBuzzer: false,
         message: "Reservation active, no action taken.",
       });
-      broadcastData(io, "soundIgnored", {
-        message: "Reservation active, no action taken.",
-      });
+
       return;
     }
 
@@ -126,7 +114,6 @@ export const postSound = async (req: Request, res: Response): Promise<void> => {
       message: "Sound event recorded and email sent.",
       sound: neioound,
     });
-    broadcastData(io, "neiooundDetected", neioound);
   } catch (error) {
     console.error("❌ Error creating sound:", error);
     if (!res.headersSent) {

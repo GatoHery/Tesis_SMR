@@ -18,8 +18,11 @@ import {
 } from "../routes";
 import passport from "passport";
 import "../config/passport";
-import { broadcastData } from "../utils/websocketConnection";
-import { dashbordEmitter } from "../emitters/dashboard.emitter";
+import { dashboardEmitter } from "../emitters/dashboard.emitter";
+import { reservationEmitter } from "../emitters/reservation.emitter";
+import { resourcesEmitter } from "../emitters/resources.emitter";
+import { sensorEmitter } from "../emitters/sensor.emitter";
+import { soundEmitter } from "../emitters/sound.emitter";
 
 dotenv.config();
 
@@ -79,11 +82,6 @@ class Server {
     this.io.on("connection", (socket: Socket) => {
       console.log("🔌 New client connected");
 
-      socket.on("message", (msg) => {
-        console.log("📨 Received:", msg);
-        broadcastData(this.io, "message", msg);
-      });
-
       socket.on("disconnect", () => {
         console.log("❌ Client disconnected");
       });
@@ -123,7 +121,13 @@ class Server {
   listen() {
     this.server.listen(this.port, () => {
       console.log(`🚀 Server running on port ${this.port}`);
-      dashbordEmitter(this.io);
+      dashboardEmitter.emitDashboardData(this.io, 60000);
+      dashboardEmitter.emitHourlyAverages(this.io, 60000);
+      dashboardEmitter.emitWeeklyLocationAverages(this.io, 60000);
+      reservationEmitter.emitWeeklyReservationSummary(this.io, 60000);
+      resourcesEmitter.emitSimplifiedResources(this.io, 60000);
+      sensorEmitter.emitAllSensors(this.io, 60000);
+      soundEmitter.emitAllSounds(this.io, 60000);
     });
   }
 }

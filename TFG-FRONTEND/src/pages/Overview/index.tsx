@@ -17,53 +17,64 @@ import useAlertStore from "@/store/alert.store";
 import useDashboardStore from "@/store/dashboard.store";
 
 const Overview = () => {
-  const { token } = theme.useToken()
+  const { token } = theme.useToken();
   const { darkMode } = useThemeStore();
   const { fetchAlerts } = useAlertStore();
-  const { metrics, fetchMetrics, loading, initializeWebsocket } = useDashboardStore();
+  const { metrics, fetchMetrics, loading, initializeWebsocket } =
+    useDashboardStore();
 
   const { Title, Paragraph } = Typography;
 
   const data = [
     {
-      title: 'Ruido promedio',
+      title: "Ruido promedio",
       value: metrics.noise.value,
       change: metrics.noise.change,
-      icon: <FiVolume2 size={24} color={darkMode ? '#fff' : token.colorPrimary} />,
-      description: 'desde la semana pasada',
-      descriptionSuffix: '%',
-      valueSuffix: 'dB',
+      icon: (
+        <FiVolume2 size={24} color={darkMode ? "#fff" : token.colorPrimary} />
+      ),
+      description: "desde la semana pasada",
+      descriptionSuffix: "%",
+      valueSuffix: "dB",
     },
     {
-      title: 'Laboratorios monitoreados',
+      title: "Laboratorios monitoreados",
       value: metrics.labsMonitored.value,
       change: metrics.labsMonitored.change,
-      icon: <BsBuilding size={24} color={darkMode ? '#fff' : token.colorPrimary} />,
-      description: 'desde la semana pasada',
+      icon: (
+        <BsBuilding size={24} color={darkMode ? "#fff" : token.colorPrimary} />
+      ),
+      description: "desde la semana pasada",
     },
     {
-      title: 'Máx. Ruido alcanzado',
+      title: "Máx. Ruido alcanzado",
       value: metrics.maxDbs.value,
       change: metrics.maxDbs.change,
-      icon: <TiWarningOutline size={24} color={darkMode ? '#fff' : token.colorPrimary} />,
-      valueSuffix: 'dB',
-      description: 'desde la semana pasada',
+      icon: (
+        <TiWarningOutline
+          size={24}
+          color={darkMode ? "#fff" : token.colorPrimary}
+        />
+      ),
+      valueSuffix: "dB",
+      description: "desde la semana pasada",
     },
     {
-      title: 'Actividad de sensores',
+      title: "Actividad de sensores",
       value: metrics.sensorActivity.value,
       change: metrics.sensorActivity.change,
-      icon: <FiActivity size={24} color={darkMode ? '#fff' : token.colorPrimary} />,
-      description: 'desde la semana pasada',
+      icon: (
+        <FiActivity size={24} color={darkMode ? "#fff" : token.colorPrimary} />
+      ),
+      description: "desde la semana pasada",
     },
   ];
 
   useEffect(() => {
     fetchAlerts();
     fetchMetrics();
-    const cleanup = initializeWebsocket();
-    return cleanup;
-  }, [fetchAlerts, fetchMetrics, initializeWebsocket]);
+    initializeWebsocket();
+  }, [fetchAlerts, fetchMetrics]);
 
   return (
     <>
@@ -101,11 +112,9 @@ const Overview = () => {
             </Card>
           </Col>
         </Row>
-
-
       </Flex>
     </>
-  )
-}
+  );
+};
 
-export default Overview
+export default Overview;

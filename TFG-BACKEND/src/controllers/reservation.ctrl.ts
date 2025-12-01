@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import { fetchReservations } from "../services/reservation.services";
-import { title } from "process";
 import { getWeekRange } from "../utils/date";
-import { Server as SocketIOServer } from "socket.io";
-import { broadcastData } from "../utils/websocketConnection";
 
 export const getReservations = async (
   req: Request,
@@ -12,13 +9,9 @@ export const getReservations = async (
   try {
     const { startDateTime, endDateTime } = req.query;
 
-    const io = req.app.get("io") as SocketIOServer;
-
     if (!startDateTime || !endDateTime) {
       res.status(400).json({ message: "Missing date parameters" });
-      broadcastData(io, "MisingDateParameters", {
-        message: "Missing date parameters",
-      });
+
       return;
     }
 
@@ -38,7 +31,6 @@ export const getReservations = async (
     );
 
     res.status(200).json(simplifiedReservations);
-    broadcastData(io, "fetchedReservations", simplifiedReservations);
   } catch (error) {
     console.error("Error getting reservations:", error);
     res.status(500).json({ message: "Error getting reservations" });
@@ -46,8 +38,6 @@ export const getReservations = async (
 };
 
 export const getWeeklySummary = async (_: Request, res: Response) => {
-  const io = _.app.get("io") as SocketIOServer;
-
   try {
     const today = new Date();
     // esta semana
@@ -75,15 +65,6 @@ export const getWeeklySummary = async (_: Request, res: Response) => {
       percentChange:
         percentChange !== null ? Number(percentChange.toFixed(2)) : null,
     });
-
-    const objectSummary = {
-      count: currentCount,
-      prevCount: previousCount,
-      dif: difference,
-      perc: percentChange !== null ? Number(percentChange.toFixed(2)) : null,
-    };
-
-    broadcastData(io, "weeklySummary", objectSummary);
   } catch (error) {
     console.error("Error computing weekly summary:", error);
     res.status(500).json({ message: "Error computing weekly summary" });

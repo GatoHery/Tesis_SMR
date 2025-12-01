@@ -1,24 +1,24 @@
 // ** AntD Imports
-import { Card, Empty, Flex, theme, Typography } from 'antd';
+import { Card, Empty, Flex, theme, Typography } from "antd";
 
 // ** Third Party Imports
-import { ApexOptions } from 'apexcharts';
-import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from "apexcharts";
+import ReactApexChart from "react-apexcharts";
 
 // ** Zustand Store Imports
-import useThemeStore from '@/store/theme.store';
-import useDashboardStore from '@/store/dashboard.store';
-import { useEffect } from 'react';
+import useThemeStore from "@/store/theme.store";
+import useDashboardStore from "@/store/dashboard.store";
+import { useEffect } from "react";
 
 const Linechart = () => {
   const { darkMode } = useThemeStore();
-  const { hourlyStats, loadingHourly, fetchHourlyStats, initializeWebsocket } = useDashboardStore();
+  const { hourlyStats, loadingHourly, fetchHourlyStats, initializeWebsocket } =
+    useDashboardStore();
   const {
     token: { colorPrimary, colorError, colorBgContainer },
   } = theme.useToken();
-  
-  useEffect(() => {
-  }, [hourlyStats, loadingHourly]);
+
+  useEffect(() => {}, [hourlyStats, loadingHourly]);
 
   const options: ApexOptions = {
     chart: {
@@ -54,7 +54,7 @@ const Linechart = () => {
         style: {
           colors: darkMode ? "#ffffff" : "#000000",
           fontSize: "14px",
-          fontWeight: 400
+          fontWeight: 400,
         },
       },
       categories: hourlyStats?.labels || [],
@@ -73,7 +73,7 @@ const Linechart = () => {
         style: {
           colors: darkMode ? "#ffffff" : "#000000",
           fontSize: "14px",
-          fontWeight: 400
+          fontWeight: 400,
         },
       },
     },
@@ -82,7 +82,7 @@ const Linechart = () => {
     },
     legend: {
       show: false,
-    }
+    },
   };
 
   const series = [
@@ -93,11 +93,10 @@ const Linechart = () => {
   ];
 
   useEffect(() => {
-    console.log('🔄 Fetching hourly stats...');
+    console.log("🔄 Fetching hourly stats...");
     fetchHourlyStats();
-    const cleanup = initializeWebsocket();
-    return cleanup;
-  }, [fetchHourlyStats, initializeWebsocket]);
+    initializeWebsocket();
+  }, []);
 
   // 🔍 Verificar si hay datos antes de renderizar
   const hasData = hourlyStats?.values && hourlyStats.values.length > 0;
@@ -106,11 +105,20 @@ const Linechart = () => {
     <>
       <Card variant="borderless" loading={loadingHourly}>
         {!hasData ? (
-          <Flex justify="center" align="center" style={{ height: "100%", width: "100%" }} vertical>
+          <Flex
+            justify="center"
+            align="center"
+            style={{ height: "100%", width: "100%" }}
+            vertical
+          >
             <Empty description="No hay datos del día disponibles" />
             {/* 🔍 Debug info */}
-            <Typography.Text type="secondary" style={{ marginTop: 8, fontSize: '12px' }}>
-              Debug: labels={hourlyStats?.labels?.length || 0}, values={hourlyStats?.values?.length || 0}
+            <Typography.Text
+              type="secondary"
+              style={{ marginTop: 8, fontSize: "12px" }}
+            >
+              Debug: labels={hourlyStats?.labels?.length || 0}, values=
+              {hourlyStats?.values?.length || 0}
             </Typography.Text>
           </Flex>
         ) : (
@@ -130,7 +138,7 @@ const Linechart = () => {
         )}
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default Linechart
+export default Linechart;

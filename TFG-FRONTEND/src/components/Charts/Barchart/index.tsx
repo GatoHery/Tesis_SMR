@@ -8,9 +8,11 @@ import useDashboardStore from "@/store/dashboard.store";
 import { useEffect } from "react";
 import { Card, Empty, Flex, Typography } from "antd";
 
-
 const Barchart = () => {
-  const { weeklyAverages, loadingWeekly, fetchWeeklyAverages } = useDashboardStore();
+  
+
+  const { weeklyAverages, loadingWeekly, fetchWeeklyAverages, initializeWebsocket } =
+    useDashboardStore();
   const { darkMode } = useThemeStore();
 
   const options: ApexOptions = {
@@ -74,33 +76,39 @@ const Barchart = () => {
 
   useEffect(() => {
     fetchWeeklyAverages();
-  }, [fetchWeeklyAverages])
+    initializeWebsocket();
+    
+  }, []);
 
   return (
     <>
       <Card variant="borderless" className="chart-card" loading={loadingWeekly}>
-        {
-          weeklyAverages.values.length === 0 ?
-            <Flex justify="center" align="center" style={{ height: "100%", width: "100%" }} vertical>
-              <Empty description="No hay datos semanales disponibles" />
-            </Flex>
-            :
-            <>
-              <Typography.Title level={5}>Ruido por laboratorio</Typography.Title>
-              <Typography.Paragraph type="secondary">
-                Promedio de nivel de ruido por laboratorio en la última semana
-              </Typography.Paragraph>
-              <ReactApexChart
-                options={options}
-                series={series}
-                type="bar"
-                height={350}
-              />
-            </>
-        }
+        {weeklyAverages.values.length === 0 ? (
+          <Flex
+            justify="center"
+            align="center"
+            style={{ height: "100%", width: "100%" }}
+            vertical
+          >
+            <Empty description="No hay datos semanales disponibles" />
+          </Flex>
+        ) : (
+          <>
+            <Typography.Title level={5}>Ruido por laboratorio</Typography.Title>
+            <Typography.Paragraph type="secondary">
+              Promedio de nivel de ruido por laboratorio en la última semana
+            </Typography.Paragraph>
+            <ReactApexChart
+              options={options}
+              series={series}
+              type="bar"
+              height={350}
+            />
+          </>
+        )}
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default Barchart
+export default Barchart;

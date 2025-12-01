@@ -68,24 +68,10 @@ const useReservationStore = create<ReservationState>()((set) => ({
   },
 
   initializeWebsocket: () => {
-    socket.on("fetchedReservations", (data: Reservation[]) => {
-      set({ reservations: data });
-    });
-
-    socket.on("weeklySummary", (data: ReservationStats) => {
+    socket.off("weekly summary");
+    socket.on("weekly summary", (data: ReservationStats) => {
       set({ stats: data });
     });
-
-    socket.on("fetchedReservationsError", (err: any) => {
-      set({ error: "Error fetching reservations" });
-      console.error(err);
-    });
-
-    return () => {
-      socket.off("fetchedReservations");
-      socket.off("weeklySummary");
-      socket.off("fetchedReservationsError");
-    };
   },
 }));
 
