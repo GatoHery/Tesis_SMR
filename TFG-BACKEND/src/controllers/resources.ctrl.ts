@@ -6,7 +6,7 @@ export const getAllResources = async (req: Request, res: Response) => {
     const { resources } = await fetchResources();
 
     // Filter resources where location is "DEI"
-    const resourcesInDEI = resources.filter(
+    const resourcesInDEI = resources?.filter(
       (resource: any) => resource.location === "DEI"
     );
 
