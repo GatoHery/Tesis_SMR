@@ -7,9 +7,9 @@ export const resourcesEmitter = {
       try {
         const resources = await fetchResources();
 
-        const resourcesInDEI = resources.filter(
-          (resource: any) => resource.location === "DEI"
-        );
+        const resourcesInDEI =
+          resources?.filter((resource: any) => resource.location === "DEI") ??
+          [];
 
         const simplifiedResources = resourcesInDEI.map((resource: any) => ({
           name: resource.name,
