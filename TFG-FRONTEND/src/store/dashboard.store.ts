@@ -11,6 +11,8 @@ type AlertState = {
   loadingHourly: boolean;
   loadingWeekly: boolean;
   error: string | null;
+  websocketEvent: number;
+  clearWebsocketEvent: () => void;
   fetchMetrics: () => Promise<void>;
   fetchHourlyStats: () => Promise<void>;
   fetchWeeklyAverages: () => Promise<void>;
@@ -51,6 +53,8 @@ const useDashboardStore = create<AlertState>()((set) => ({
   loadingHourly: true,
   loadingWeekly: true,
   error: null,
+  websocketEvent: 0,
+  clearWebsocketEvent: () => set({ websocketEvent: 0 }),
 
   fetchMetrics: async () => {
     try {

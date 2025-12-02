@@ -1,6 +1,7 @@
 // ** Third Party Imports
 import { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
+import notification from "antd/lib/notification";
 
 // ** Zustand Store Imports
 import useThemeStore from "@/store/theme.store";
@@ -9,10 +10,14 @@ import { useEffect } from "react";
 import { Card, Empty, Flex, Typography } from "antd";
 
 const Barchart = () => {
-  
-
-  const { weeklyAverages, loadingWeekly, fetchWeeklyAverages, initializeWebsocket } =
-    useDashboardStore();
+  const {
+    weeklyAverages,
+    loadingWeekly,
+    fetchWeeklyAverages,
+    initializeWebsocket,
+    websocketEvent,
+    clearWebsocketEvent,
+  } = useDashboardStore();
   const { darkMode } = useThemeStore();
 
   const options: ApexOptions = {
@@ -77,8 +82,19 @@ const Barchart = () => {
   useEffect(() => {
     fetchWeeklyAverages();
     initializeWebsocket();
-    
   }, []);
+
+  useEffect(() => {
+    if (!websocketEvent) return;
+
+    /* message.success("Datos de promedios semanales actualizados"); */
+    notification.success({
+      message: "Datos de promedios semanales actualizados",
+      placement: "bottomLeft",
+      duration: 5,
+    })
+    clearWebsocketEvent();
+  }, [websocketEvent, clearWebsocketEvent]);
 
   return (
     <>
