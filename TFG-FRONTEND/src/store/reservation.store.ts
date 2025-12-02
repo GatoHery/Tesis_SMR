@@ -70,6 +70,7 @@ const useReservationStore = create<ReservationState>()((set) => ({
   initializeWebsocket: () => {
     socket.off("weekly summary");
     socket.on("weekly summary", (data: ReservationStats) => {
+      console.log("Received weekly summary via websocket: ");
       set({ stats: data });
     });
   },

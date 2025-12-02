@@ -40,6 +40,7 @@ const useResourceStore = create<ResourceState>()((set) => ({
   initializeWebsocket: () => {
     socket.off("simplified resources");
     socket.on("simplified resources", (data: Resource[]) => {
+      console.log("Received simplified resources via websocket: ");
       set({ resources: data });
     });
   },

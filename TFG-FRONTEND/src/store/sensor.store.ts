@@ -108,6 +108,7 @@ const useSensorStore = create<SensorState>()((set) => ({
   initializeWebsocket: () => {
     socket.off("all sounds");
     socket.on("all sounds", (data: Sensor[]) => {
+      console.log("Received all sounds via websocket: ");
       set({ sensors: data });
     });
   },
