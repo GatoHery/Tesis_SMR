@@ -15,7 +15,6 @@ import AlertsTable from "@/components/GenericTable/Alerts";
 import { useEffect } from "react";
 import useAlertStore from "@/store/alert.store";
 import useDashboardStore from "@/store/dashboard.store";
-import { Slide, toast } from "react-toastify";
 
 const Overview = () => {
   const { token } = theme.useToken();
@@ -85,19 +84,6 @@ const Overview = () => {
 
   useEffect(() => {
     if (!websocketEvent) return;
-
-    /* message.success("Datos de promedios semanales actualizados"); */
-    toast.success("Datos de metricas y alertas actualizados", {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: darkMode ? "dark" : "light",
-      transition: Slide,
-    });
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);

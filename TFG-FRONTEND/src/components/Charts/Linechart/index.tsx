@@ -9,7 +9,6 @@ import ReactApexChart from "react-apexcharts";
 import useThemeStore from "@/store/theme.store";
 import useDashboardStore from "@/store/dashboard.store";
 import { useEffect } from "react";
-import { Slide, toast } from "react-toastify";
 
 const Linechart = () => {
   const { darkMode } = useThemeStore();
@@ -107,19 +106,6 @@ const Linechart = () => {
 
   useEffect(() => {
     if (!websocketEvent) return;
-
-    /* message.success("Datos de promedios semanales actualizados"); */
-    toast.success("Datos de gráfico de líneas actualizados", {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: darkMode ? "dark" : "light",
-      transition: Slide,
-    });
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);

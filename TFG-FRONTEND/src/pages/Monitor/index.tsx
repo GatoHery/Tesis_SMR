@@ -3,8 +3,6 @@ import { Col, Flex, Row, Spin, Tabs, TabsProps, Typography } from "antd";
 import MonitorCard from "@/components/MonitorCard";
 import useResourceStore from "@/store/resource.store";
 import useSensorStore from "@/store/sensor.store";
-import { Slide, toast } from "react-toastify";
-import useThemeStore from "@/store/theme.store";
 
 const Sensors = () => {
   const {
@@ -16,8 +14,6 @@ const Sensors = () => {
     clearWebsocketEvent,
   } = useSensorStore();
 
-  const { darkMode } = useThemeStore();
-
   useEffect(() => {
     fetchSensors();
     initializeWebsocket();
@@ -25,19 +21,6 @@ const Sensors = () => {
 
   useEffect(() => {
     if (!websocketEvent) return;
-
-    /* message.success("Datos de promedios semanales actualizados"); */
-    toast.success("Datos de sensores actualizados", {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: darkMode ? "dark" : "light",
-      transition: Slide,
-    });
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
@@ -98,8 +81,6 @@ const Locations = () => {
     clearWebsocketEvent,
   } = useResourceStore();
 
-  const { darkMode } = useThemeStore();
-
   useEffect(() => {
     fetchResources();
     initializeWebsocket();
@@ -107,19 +88,6 @@ const Locations = () => {
 
   useEffect(() => {
     if (!websocketEvent) return;
-
-    /* message.success("Datos de promedios semanales actualizados"); */
-    toast.success("Datos de recursos actualizados", {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: darkMode ? "dark" : "light",
-      transition: Slide,
-    });
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);

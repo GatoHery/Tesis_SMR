@@ -1,7 +1,6 @@
 // ** Third Party Imports
 import { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
-import { Slide, toast } from "react-toastify";
 
 // ** Zustand Store Imports
 import useThemeStore from "@/store/theme.store";
@@ -86,19 +85,6 @@ const Barchart = () => {
 
   useEffect(() => {
     if (!websocketEvent) return;
-
-    /* message.success("Datos de promedios semanales actualizados"); */
-    toast.success("Datos de gráfico de barras actualizados", {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: darkMode ? "dark" : "light",
-      transition: Slide,
-    });
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
