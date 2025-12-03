@@ -15,7 +15,6 @@ type ResourceState = {
   initializeWebsocket: () => void;
 };
 
-const { darkMode } = useThemeStore();
 const useResourceStore = create<ResourceState>()((set) => ({
   resources: [],
   loading: true,
@@ -45,6 +44,8 @@ const useResourceStore = create<ResourceState>()((set) => ({
   },
 
   initializeWebsocket: () => {
+    const { darkMode } = useThemeStore();
+
     socket.off("simplified resources");
     socket.on("simplified resources", (data: Resource[]) => {
       toast.success("Datos de recursos simplificados actualizados", {

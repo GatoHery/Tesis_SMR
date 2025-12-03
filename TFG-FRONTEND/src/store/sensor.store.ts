@@ -21,8 +21,6 @@ type SensorState = {
   initializeWebsocket: () => void;
 };
 
-const { darkMode } = useThemeStore();
-
 const useSensorStore = create<SensorState>()((set) => ({
   sensors: [],
   loading: true,
@@ -114,6 +112,8 @@ const useSensorStore = create<SensorState>()((set) => ({
   },
 
   initializeWebsocket: () => {
+    const { darkMode } = useThemeStore();
+
     socket.off("all sounds");
     socket.on("all sounds", (data: Sensor[]) => {
       toast.success("Datos de todos los sonidos actualizados", {

@@ -21,8 +21,6 @@ type AlertState = {
   initializeWebsocket: () => void;
 };
 
-const { darkMode } = useThemeStore();
-
 const initialMetrics: Metrics = {
   noise: { value: 0, change: 0 },
   labsMonitored: { value: 0, change: 0 },
@@ -106,6 +104,8 @@ const useDashboardStore = create<AlertState>()((set) => ({
   },
 
   initializeWebsocket: () => {
+    const { darkMode } = useThemeStore();
+
     socket.off("dashboardMetrics");
     socket.off("hourlyAverages");
     socket.off("weeklyAverages");
