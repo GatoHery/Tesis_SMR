@@ -1,7 +1,7 @@
 // ** Third Party Imports
 import { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
-import notification from "antd/lib/notification";
+import { Slide, toast } from "react-toastify";
 
 // ** Zustand Store Imports
 import useThemeStore from "@/store/theme.store";
@@ -88,11 +88,18 @@ const Barchart = () => {
     if (!websocketEvent) return;
 
     /* message.success("Datos de promedios semanales actualizados"); */
-    notification.success({
-      message: "Datos de promedios semanales actualizados",
-      placement: "bottomLeft",
-      duration: 5,
-    })
+    toast.success("Datos de gráfico de barras actualizados", {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: darkMode ? "dark" : "light",
+      transition: Slide,
+    });
+
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 

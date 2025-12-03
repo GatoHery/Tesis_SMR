@@ -13,6 +13,7 @@ import useThemeStore from "@/store/theme.store";
 import DataCardList from "@/components/DataCardList";
 import ReservationsTable from "@/components/GenericTable/Reservations";
 import useReservationStore from "@/store/reservation.store";
+import { Slide, toast } from "react-toastify";
 
 const { RangePicker } = DatePicker;
 const { Title, Paragraph } = Typography;
@@ -78,6 +79,8 @@ const Reservations = () => {
     stats,
     loadingStats,
     initializeWebsocket,
+    clearWebsocketEvent,
+    websocketEvent,
   } = useReservationStore();
 
   const data = [
@@ -103,6 +106,25 @@ const Reservations = () => {
   useEffect(() => {
     fetchReservationsStats();
   }, [fetchReservationsStats]);
+
+  useEffect(() => {
+    if (!websocketEvent) return;
+
+    /* message.success("Datos de promedios semanales actualizados"); */
+    toast.success("Datos de weekly summary actualizados", {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: darkMode ? "dark" : "light",
+      transition: Slide,
+    });
+
+    clearWebsocketEvent();
+  }, [websocketEvent, clearWebsocketEvent]);
 
   return (
     <Flex vertical gap={24}>

@@ -35,6 +35,7 @@ export const reservationEmitter = {
         };
 
         /* broadcastData(io, "weeklySummary", objectSummary); */
+        console.log("Emitting weekly reservation summary");
         io.emit("weekly summary", objectSummary);
       } catch (error) {
         console.error("Error broadcasting reservation summary: ", error);

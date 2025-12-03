@@ -9,11 +9,18 @@ import ReactApexChart from "react-apexcharts";
 import useThemeStore from "@/store/theme.store";
 import useDashboardStore from "@/store/dashboard.store";
 import { useEffect } from "react";
+import { Slide, toast } from "react-toastify";
 
 const Linechart = () => {
   const { darkMode } = useThemeStore();
-  const { hourlyStats, loadingHourly, fetchHourlyStats, initializeWebsocket } =
-    useDashboardStore();
+  const {
+    hourlyStats,
+    loadingHourly,
+    fetchHourlyStats,
+    initializeWebsocket,
+    clearWebsocketEvent,
+    websocketEvent,
+  } = useDashboardStore();
   const {
     token: { colorPrimary, colorError, colorBgContainer },
   } = theme.useToken();
@@ -97,6 +104,25 @@ const Linechart = () => {
     fetchHourlyStats();
     initializeWebsocket();
   }, []);
+
+  useEffect(() => {
+    if (!websocketEvent) return;
+
+    /* message.success("Datos de promedios semanales actualizados"); */
+    toast.success("Datos de gráfico de líneas actualizados", {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: darkMode ? "dark" : "light",
+      transition: Slide,
+    });
+
+    clearWebsocketEvent();
+  }, [websocketEvent, clearWebsocketEvent]);
 
   // 🔍 Verificar si hay datos antes de renderizar
   const hasData = hourlyStats?.values && hourlyStats.values.length > 0;

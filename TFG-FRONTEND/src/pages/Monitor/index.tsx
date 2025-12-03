@@ -3,15 +3,44 @@ import { Col, Flex, Row, Spin, Tabs, TabsProps, Typography } from "antd";
 import MonitorCard from "@/components/MonitorCard";
 import useResourceStore from "@/store/resource.store";
 import useSensorStore from "@/store/sensor.store";
+import { Slide, toast } from "react-toastify";
+import useThemeStore from "@/store/theme.store";
 
 const Sensors = () => {
-  const { sensors, loading, fetchSensors, initializeWebsocket } =
-    useSensorStore();
+  const {
+    sensors,
+    loading,
+    fetchSensors,
+    initializeWebsocket,
+    websocketEvent,
+    clearWebsocketEvent,
+  } = useSensorStore();
+
+  const { darkMode } = useThemeStore();
 
   useEffect(() => {
     fetchSensors();
     initializeWebsocket();
   }, [fetchSensors]);
+
+  useEffect(() => {
+    if (!websocketEvent) return;
+
+    /* message.success("Datos de promedios semanales actualizados"); */
+    toast.success("Datos de sensores actualizados", {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: darkMode ? "dark" : "light",
+      transition: Slide,
+    });
+
+    clearWebsocketEvent();
+  }, [websocketEvent, clearWebsocketEvent]);
 
   return (
     <>
@@ -60,14 +89,40 @@ const Sensors = () => {
 };
 
 const Locations = () => {
-  const { resources, loading, fetchResources, initializeWebsocket } =
-    useResourceStore();
+  const {
+    resources,
+    loading,
+    fetchResources,
+    initializeWebsocket,
+    websocketEvent,
+    clearWebsocketEvent,
+  } = useResourceStore();
+
+  const { darkMode } = useThemeStore();
 
   useEffect(() => {
     fetchResources();
     initializeWebsocket();
   }, [fetchResources]);
 
+  useEffect(() => {
+    if (!websocketEvent) return;
+
+    /* message.success("Datos de promedios semanales actualizados"); */
+    toast.success("Datos de recursos actualizados", {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: darkMode ? "dark" : "light",
+      transition: Slide,
+    });
+
+    clearWebsocketEvent();
+  }, [websocketEvent, clearWebsocketEvent]);
   return (
     <>
       {loading ? (
