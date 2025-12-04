@@ -3,8 +3,6 @@ import { reservationService } from "@/services/reservation.service";
 import { create } from "zustand";
 import { Dayjs } from "dayjs";
 import socket from "@/services/socket.client";
-import { Slide, toast } from "react-toastify";
-import useThemeStore from "./theme.store";
 
 type ReservationState = {
   reservations: Reservation[];
@@ -73,22 +71,11 @@ const useReservationStore = create<ReservationState>()((set) => ({
   },
 
   initializeWebsocket: () => {
-    const { darkMode } = useThemeStore();
+  
 
     socket.off("weekly summary");
     socket.on("weekly summary", (data: ReservationStats) => {
       console.log("Received weekly summary via websocket: ", data);
-      toast.success("Datos de resumen semanal actualizados", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: darkMode ? "dark" : "light",
-        transition: Slide,
-      });
 
       set({ stats: data });
     });
