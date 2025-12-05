@@ -79,7 +79,8 @@ class Server {
   }
 
   private initializeSocketIO() {
-    this.io.on("connection", (socket: Socket) => {
+    console.log("Initializing Socket...");
+        this.io.on("connection", (socket: Socket) => {
       console.log("🔌 New client connected");
 
       socket.on("disconnect", () => {
