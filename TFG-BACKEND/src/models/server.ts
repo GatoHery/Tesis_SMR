@@ -51,8 +51,9 @@ class Server {
 
     /* Create Websocket server */
     this.io = new SocketIOServer(this.server, {
+      path: proccess.env.SOCKET_PATH || "/socket.io",
       cors: {
-        origin: process.env.FRONTEND_URL || "http://localhost:8080" || "http://localhost:3000",
+        origin: process.env.FRONTEND_URL || "http://localhost:8080",
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -82,15 +83,13 @@ class Server {
   }
 
   private initializeSocketIO() {
-  console.log("Initializing Socket...");
-  this.io.on("connection", (socket: Socket) => {    
-      console.log(`🔌 Client connected: ${socket.id}`);    
-      socket.on("error", (error) => {      
-          console.error(`❌ Socket error (${socket.id}):`, error);    });    
-          socket.on("disconnect", (reason) => {      
-            console.log(`❌ Client disconnected (${socket.id}): ${reason}`);    
-          });  
-        });
+    console.log("Initializing Socket...");
+    this.io.on("connection", (socket: Socket) => {
+      console.log(`🔌 Client connected: ${socket.id}`);
+      socket.on("error", (error) => console.error(`❌ Socket error (${socket.id}):`, error));
+      socket.on("disconnect", (reason) => console.log(`❌ Client disconnected (${socket.id}): ${reason}`));
+    });
+
   this.io.engine.on("connection_error", (err: any) => {
     console.error("Socket.IO engine connection_error:", err);
   });
