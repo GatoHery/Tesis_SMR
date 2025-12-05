@@ -12,14 +12,8 @@ import { useEffect } from "react";
 
 const Linechart = () => {
   const { darkMode } = useThemeStore();
-  const {
-    hourlyStats,
-    loadingHourly,
-    fetchHourlyStats,
-    initializeWebsocket,
-    clearWebsocketEvent,
-    websocketEvent,
-  } = useDashboardStore();
+  const { hourlyStats, loadingHourly, fetchHourlyStats, initializeWebsocket } =
+    useDashboardStore();
   const {
     token: { colorPrimary, colorError, colorBgContainer },
   } = theme.useToken();
@@ -104,12 +98,15 @@ const Linechart = () => {
     initializeWebsocket();
   }, []);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 
+=======
+>>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
   // 🔍 Verificar si hay datos antes de renderizar
   const hasData = hourlyStats?.values && hourlyStats.values.length > 0;
 

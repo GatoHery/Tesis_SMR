@@ -7,8 +7,6 @@ type ResourceState = {
   resources: Resource[];
   loading: boolean;
   error: string | null;
-  websocketEvent: number;
-  clearWebsocketEvent: () => void;
   fetchResources: () => Promise<void>;
   initializeWebsocket: () => void;
 };
@@ -17,8 +15,6 @@ const useResourceStore = create<ResourceState>()((set) => ({
   resources: [],
   loading: true,
   error: null,
-  websocketEvent: 0,
-  clearWebsocketEvent: () => set({ websocketEvent: 0 }),
 
   fetchResources: async () => {
     try {

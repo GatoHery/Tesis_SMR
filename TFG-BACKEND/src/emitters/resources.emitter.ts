@@ -21,7 +21,6 @@ export const resourcesEmitter = {
           simplifiedResources = [];
         }
 
-        console.log("Emitting simplified resources");
         io.emit("simplified resources", simplifiedResources);
 
         /* broadcastData(io, "simplifiedResources", resources); */

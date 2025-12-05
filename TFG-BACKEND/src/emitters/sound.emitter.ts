@@ -6,7 +6,6 @@ export const soundEmitter = {
     setInterval(async () => {
       try {
         const sounds = await fetchAllSounds();
-        console.log("Emitting all sensors");
         io.emit("all sounds", sounds);
       } catch (error) {
         console.error("Error broadcasting sensor data: ", error);

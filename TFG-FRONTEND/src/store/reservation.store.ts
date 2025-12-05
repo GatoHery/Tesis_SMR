@@ -10,8 +10,6 @@ type ReservationState = {
   loading: boolean;
   loadingStats: boolean;
   error: string | null;
-  websocketEvent: number;
-  clearWebsocketEvent: () => void;
   fetchReservations: (from: Dayjs, to: Dayjs) => Promise<void>;
   fetchReservationsStats: () => Promise<void>;
   initializeWebsocket: () => void;
@@ -30,8 +28,7 @@ const useReservationStore = create<ReservationState>()((set) => ({
   loading: false,
   loadingStats: false,
   error: null,
-  websocketEvent: 0,
-  clearWebsocketEvent: () => set({ websocketEvent: 0 }),
+
   fetchReservations: async (from, to) => {
     try {
       set({ loading: true });
