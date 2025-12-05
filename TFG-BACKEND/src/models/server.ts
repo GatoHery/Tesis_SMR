@@ -57,6 +57,9 @@ class Server {
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
       },
+
+      transports: ["websocket", "polling"],
+ 
     });
 
     /* inicializando webSocket */
