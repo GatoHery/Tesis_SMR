@@ -83,13 +83,15 @@ class Server {
   }
 
   private initializeSocketIO() {
-    console.log("Initializing Socket...");
-    this.io.on("connection", (socket: Socket) => {
-      console.log(`🔌 Client connected: ${socket.id}`);
-      socket.on("error", (error) => console.error(`❌ Socket error (${socket.id}):`, error));
-      socket.on("disconnect", (reason) => console.log(`❌ Client disconnected (${socket.id}): ${reason}`));
-    });
-
+  console.log("Initializing Socket...");
+  this.io.on("connection", (socket: Socket) => {    
+      console.log(`🔌 Client connected: ${socket.id}`);    
+      socket.on("error", (error) => {      
+          console.error(`❌ Socket error (${socket.id}):`, error);    });    
+          socket.on("disconnect", (reason) => {      
+            console.log(`❌ Client disconnected (${socket.id}): ${reason}`);    
+          });  
+        });
   this.io.engine.on("connection_error", (err: any) => {
     console.error("Socket.IO engine connection_error:", err);
   });
