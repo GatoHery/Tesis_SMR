@@ -79,6 +79,7 @@ class Server {
   }
 
   private initializeSocketIO() {
+  console.log("Initializing Socket...");
   this.io.on("connection", (socket: Socket) => {    
       console.log(`🔌 Client connected: ${socket.id}`);    
       socket.on("error", (error) => {      
