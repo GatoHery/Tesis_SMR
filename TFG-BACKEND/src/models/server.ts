@@ -53,6 +53,7 @@ class Server {
     this.io = new SocketIOServer(this.server, {
       cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:8080",
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -91,6 +92,9 @@ class Server {
             console.log(`❌ Client disconnected (${socket.id}): ${reason}`);    
           });  
         });
+  this.io.engine.on("connection_error", (err: any) => {
+    console.error("Socket.IO engine connection_error:", err);
+  });
  
     /*
     console.log("Initializing Socket...");
