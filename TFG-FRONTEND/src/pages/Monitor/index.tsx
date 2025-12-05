@@ -6,6 +6,7 @@ import useSensorStore from "@/store/sensor.store";
 
 const Sensors = () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const {
     sensors,
     loading,
@@ -18,6 +19,10 @@ const Sensors = () => {
   const { sensors, loading, fetchSensors, initializeWebsocket } =
     useSensorStore();
 >>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
+=======
+  const { sensors, loading, fetchSensors, initializeWebsocket } =
+    useSensorStore();
+>>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 
   useEffect(() => {
     fetchSensors();
@@ -25,12 +30,15 @@ const Sensors = () => {
   }, [fetchSensors]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 
+=======
+>>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 =======
 >>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
   return (
@@ -81,6 +89,7 @@ const Sensors = () => {
 
 const Locations = () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const {
     resources,
     loading,
@@ -93,6 +102,10 @@ const Locations = () => {
   const { resources, loading, fetchResources, initializeWebsocket } =
     useResourceStore();
 >>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
+=======
+  const { resources, loading, fetchResources, initializeWebsocket } =
+    useResourceStore();
+>>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 
   useEffect(() => {
     fetchResources();
@@ -100,11 +113,14 @@ const Locations = () => {
   }, [fetchResources]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
+=======
+>>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 =======
 >>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
   return (

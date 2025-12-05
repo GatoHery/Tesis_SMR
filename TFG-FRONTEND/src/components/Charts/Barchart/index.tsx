@@ -2,6 +2,10 @@
 import { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import notification from "antd/lib/notification";
+>>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 =======
 import notification from "antd/lib/notification";
 >>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
@@ -98,6 +102,9 @@ const Barchart = () => {
       placement: "bottomLeft",
       duration: 5,
     })
+<<<<<<< HEAD
+>>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
+=======
 >>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
