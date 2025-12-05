@@ -52,8 +52,7 @@ class Server {
     /* Create Websocket server */
     this.io = new SocketIOServer(this.server, {
       cors: {
-        origin: process.env.FRONTEND_URL || "http://localhost:8080",
-        origin: process.env.FRONTEND_URL || "http://localhost:3000",
+        origin: process.env.FRONTEND_URL || "http://localhost:8080" || "http://localhost:3000",
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
