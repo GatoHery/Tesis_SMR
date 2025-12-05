@@ -17,6 +17,8 @@ type ReservationState = {
   initializeWebsocket: () => void;
 };
 
+const { darkMode } = useThemeStore();
+
 const initialStats: ReservationStats = {
   currentCount: 0,
   previousCount: 0,
@@ -70,8 +72,6 @@ const useReservationStore = create<ReservationState>()((set) => ({
   },
 
   initializeWebsocket: () => {
-    const { darkMode } = useThemeStore();
-
     socket.off("weekly summary");
     socket.on("weekly summary", (data: ReservationStats) => {
       console.log("Received weekly summary via websocket: ", data);
