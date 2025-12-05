@@ -108,19 +108,19 @@ const useDashboardStore = create<AlertState>()((set) => ({
     socket.off("weeklyAverages");
 
     socket.on("dashboard metrics", (data: Metrics) => {
-      console.log("Received dashboard metrics via websocket: ", data);
+      console.log("Received dashboard metrics via websocket: ");
 
       set({ metrics: data });
     });
 
     socket.on("hourly averages", (data: GrahpsData) => {
-      console.log("Received hourly averages via websocket: ", data);
+      console.log("Received hourly averages via websocket: ");
 
       set({ hourlyStats: data });
     });
 
     socket.on("weekly location averages", (data: GrahpsData) => {
-      console.log("Received weekly location averages via websocket: ", data);
+      console.log("Received weekly location averages via websocket: ");
       
       set({ weeklyAverages: data });
     });

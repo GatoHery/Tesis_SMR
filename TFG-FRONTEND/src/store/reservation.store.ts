@@ -75,7 +75,7 @@ const useReservationStore = create<ReservationState>()((set) => ({
 
     socket.off("weekly summary");
     socket.on("weekly summary", (data: ReservationStats) => {
-      console.log("Received weekly summary via websocket: ", data);
+      console.log("Received weekly summary via websocket: ");
 
       set({ stats: data });
     });
