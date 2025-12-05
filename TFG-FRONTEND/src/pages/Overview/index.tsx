@@ -20,8 +20,14 @@ const Overview = () => {
   const { token } = theme.useToken();
   const { darkMode } = useThemeStore();
   const { fetchAlerts } = useAlertStore();
-  const { metrics, fetchMetrics, loading, initializeWebsocket } =
-    useDashboardStore();
+  const {
+    metrics,
+    fetchMetrics,
+    loading,
+    initializeWebsocket,
+    clearWebsocketEvent,
+    websocketEvent,
+  } = useDashboardStore();
 
   const { Title, Paragraph } = Typography;
 
@@ -76,18 +82,12 @@ const Overview = () => {
     initializeWebsocket();
   }, [fetchAlerts, fetchMetrics]);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
   return (
     <>
       <Flex vertical gap={24}>

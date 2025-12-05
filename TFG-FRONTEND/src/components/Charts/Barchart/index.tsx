@@ -1,14 +1,6 @@
 // ** Third Party Imports
 import { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import notification from "antd/lib/notification";
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
-import notification from "antd/lib/notification";
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 
 // ** Zustand Store Imports
 import useThemeStore from "@/store/theme.store";
@@ -94,18 +86,6 @@ const Barchart = () => {
   useEffect(() => {
     if (!websocketEvent) return;
 
-<<<<<<< HEAD
-=======
-    /* message.success("Datos de promedios semanales actualizados"); */
-    notification.success({
-      message: "Datos de promedios semanales actualizados",
-      placement: "bottomLeft",
-      duration: 5,
-    })
-<<<<<<< HEAD
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 

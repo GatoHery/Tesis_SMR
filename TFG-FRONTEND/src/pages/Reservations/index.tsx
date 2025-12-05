@@ -78,6 +78,8 @@ const Reservations = () => {
     stats,
     loadingStats,
     initializeWebsocket,
+    clearWebsocketEvent,
+    websocketEvent,
   } = useReservationStore();
 
   const data = [
@@ -104,18 +106,12 @@ const Reservations = () => {
     fetchReservationsStats();
   }, [fetchReservationsStats]);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
   return (
     <Flex vertical gap={24}>
       <Row>

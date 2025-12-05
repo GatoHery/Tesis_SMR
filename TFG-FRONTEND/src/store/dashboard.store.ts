@@ -2,8 +2,6 @@ import { dashboardService } from "@/services/dashboard.service";
 import { GrahpsData, Metrics } from "@/types/dashboard.type";
 import { create } from "zustand";
 import socket from "@/services/socket.client";
-import { Slide, toast } from "react-toastify";
-import useThemeStore from "./theme.store";
 
 type AlertState = {
   metrics: Metrics;
@@ -20,8 +18,6 @@ type AlertState = {
   fetchWeeklyAverages: () => Promise<void>;
   initializeWebsocket: () => void;
 };
-
-const { darkMode } = useThemeStore();
 
 const initialMetrics: Metrics = {
   noise: { value: 0, change: 0 },
@@ -106,65 +102,29 @@ const useDashboardStore = create<AlertState>()((set) => ({
   },
 
   initializeWebsocket: () => {
+
     socket.off("dashboardMetrics");
     socket.off("hourlyAverages");
     socket.off("weeklyAverages");
 
     socket.on("dashboard metrics", (data: Metrics) => {
       console.log("Received dashboard metrics via websocket: ", data);
-      /* message.success("Datos de promedios semanales actualizados"); */
-      toast.success("Datos de métricas actualizados", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: darkMode ? "dark" : "light",
-        transition: Slide,
-      });
 
       set({ metrics: data });
     });
 
     socket.on("hourly averages", (data: GrahpsData) => {
       console.log("Received hourly averages via websocket: ", data);
-      toast.success("Datos de promedios por hora actualizados", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: darkMode ? "dark" : "light",
-        transition: Slide,
-      });
+
       set({ hourlyStats: data });
     });
 
     socket.on("weekly location averages", (data: GrahpsData) => {
       console.log("Received weekly location averages via websocket: ", data);
-      toast.success("Datos de promedios de ubicación semanales actualizados", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: darkMode ? "dark" : "light",
-        transition: Slide,
-      });
-
+      
       set({ weeklyAverages: data });
     });
 
-    /* socket.on("dashboardMetricsError", (err: any) => {
-      set({ error: "Error in dashboard metrics Websocket" });
-      console.error(err);
-    }); */
   },
 }));
 

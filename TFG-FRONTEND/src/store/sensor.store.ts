@@ -2,8 +2,6 @@ import { monitorService } from "@/services/monitor.service";
 import { Sensor } from "@/types/monitor.type";
 import { create } from "zustand";
 import socket from "@/services/socket.client";
-import { Slide, toast } from "react-toastify";
-import useThemeStore from "./theme.store";
 
 type SensorState = {
   sensors: Sensor[];
@@ -12,14 +10,14 @@ type SensorState = {
   isNotificationSetting: boolean;
   isThresholdSetting: boolean;
   error: string | null;
+  websocketEvent: number;
+  clearWebsocketEvent: () => void;
   fetchSensors: () => Promise<void>;
   setAlarm: (sensorIp: string, value: boolean) => Promise<void>;
   setNotifications: (sensorIp: string, value: boolean) => Promise<void>;
   setThreshold: (sensorIp: string, value: number) => Promise<void>;
   initializeWebsocket: () => void;
 };
-
-const { darkMode } = useThemeStore();
 
 const useSensorStore = create<SensorState>()((set) => ({
   sensors: [],
@@ -28,6 +26,8 @@ const useSensorStore = create<SensorState>()((set) => ({
   isNotificationSetting: false,
   isThresholdSetting: false,
   error: null,
+  websocketEvent: 0,
+  clearWebsocketEvent: () => set({ websocketEvent: 0 }),
 
   fetchSensors: async () => {
     try {
@@ -110,19 +110,9 @@ const useSensorStore = create<SensorState>()((set) => ({
   },
 
   initializeWebsocket: () => {
+
     socket.off("all sounds");
     socket.on("all sounds", (data: Sensor[]) => {
-      toast.success("Datos de todos los sonidos actualizados", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: darkMode ? "dark" : "light",
-        transition: Slide,
-      });
 
       console.log("Received all sounds via websocket: ", data);
       set({ sensors: data });

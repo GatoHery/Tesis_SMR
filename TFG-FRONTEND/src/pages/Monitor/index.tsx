@@ -5,8 +5,6 @@ import useResourceStore from "@/store/resource.store";
 import useSensorStore from "@/store/sensor.store";
 
 const Sensors = () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
   const {
     sensors,
     loading,
@@ -15,32 +13,18 @@ const Sensors = () => {
     websocketEvent,
     clearWebsocketEvent,
   } = useSensorStore();
-=======
-  const { sensors, loading, fetchSensors, initializeWebsocket } =
-    useSensorStore();
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
-  const { sensors, loading, fetchSensors, initializeWebsocket } =
-    useSensorStore();
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 
   useEffect(() => {
     fetchSensors();
     initializeWebsocket();
   }, [fetchSensors]);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
   return (
     <>
       {loading ? (
@@ -88,8 +72,6 @@ const Sensors = () => {
 };
 
 const Locations = () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
   const {
     resources,
     loading,
@@ -98,31 +80,17 @@ const Locations = () => {
     websocketEvent,
     clearWebsocketEvent,
   } = useResourceStore();
-=======
-  const { resources, loading, fetchResources, initializeWebsocket } =
-    useResourceStore();
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
-  const { resources, loading, fetchResources, initializeWebsocket } =
-    useResourceStore();
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
 
   useEffect(() => {
     fetchResources();
     initializeWebsocket();
   }, [fetchResources]);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
-=======
->>>>>>> parent of 72734b3 (feature/modificando frontend y emisores de backend)
   return (
     <>
       {loading ? (
