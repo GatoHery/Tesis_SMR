@@ -79,6 +79,16 @@ class Server {
   }
 
   private initializeSocketIO() {
+  this.io.on("connection", (socket: Socket) => {    
+      console.log(`🔌 Client connected: ${socket.id}`);    
+      socket.on("error", (error) => {      
+          console.error(`❌ Socket error (${socket.id}):`, error);    });    
+          socket.on("disconnect", (reason) => {      
+            console.log(`❌ Client disconnected (${socket.id}): ${reason}`);    
+          });  
+        });
+ 
+    /*
     console.log("Initializing Socket...");
         this.io.on("connection", (socket: Socket) => {
       console.log("🔌 New client connected");
@@ -86,7 +96,7 @@ class Server {
       socket.on("disconnect", () => {
         console.log("❌ Client disconnected");
       });
-    });
+    });*/
   }
 
   async connectingDatabase() {
