@@ -13,6 +13,7 @@ export const dashboardEmitter = {
         io.emit("dashboard metrics", metrics);
       } catch (error) {
         console.error("Error emitting dashboard data: ", error);
+        io.emit("dashboardMetricsError", error);
       }
     }, intervalMs);
   },
@@ -23,6 +24,7 @@ export const dashboardEmitter = {
         io.emit("hourly averages", hourly);
       } catch (error) {
         console.error("Error emitting hourly averages: ", error);
+        io.emit("hourlyAveragesError", error);
       }
     }, intervalMs);
   },
@@ -33,6 +35,7 @@ export const dashboardEmitter = {
         io.emit("weekly location averages", weekly);
       } catch (error) {
         console.error("Error emitting hourly averages: ", error);
+        io.emit("hourlyAveragesError", error);
       }
     }, intervalMs);
   },
