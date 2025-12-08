@@ -26,6 +26,7 @@ function App() {
 
 
     if(token === null ) navigate("/login", { replace: true });
+    //Comentario de prueba
     
   }, [whoami]);
 
