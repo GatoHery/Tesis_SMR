@@ -19,19 +19,21 @@ import { getCookie } from "./utils/cookies";
 
 function App() {
   const { darkMode } = useThemeStore();
-  const { whoami, isAuthenticated, loading } = useAuthStore();
+  const { whoami} = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = getCookie("token");
-    (async () => {
-
+    const run  = async () => {
+      console.log("token: ", token !== null )
+      console.log("token value: ", token)
 
       if (token !== null) {
+        
         try {
           await whoami();
-
-          if (isAuthenticated == true && loading == false) {
+          const authenticatedSession = useAuthStore.getState().isAuthenticated;
+          if (authenticatedSession == true ) {
             navigate("/", { replace: true });
           }
           else {
@@ -42,17 +44,17 @@ function App() {
 
         } catch (error) {
           toast.error("Error al validar sesión");
-
+          navigate("/login", { replace: true });
 
         };
       } else {
         navigate("/login", { replace: true });
       }
     }
-    )
+    
     //Comentario de prueba
 
-  }, [whoami]);
+  }, [whoami, navigate]);
 
   return (
     <ConfigProvider
