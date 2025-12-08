@@ -88,7 +88,7 @@ export const monitorService = {
         ? parseInt(savedThreshold) 
         : (sensor.threshold || 85);
       
-      sensor.ip = '192.168.137.100';
+      sensor.ip = '192.168.137.201';
       sensor.name = sensor.name || 'Sensor 1';
       sensor.isReal = true;
       
