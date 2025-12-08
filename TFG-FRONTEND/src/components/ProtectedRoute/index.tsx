@@ -19,6 +19,8 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
 
 
   if(isAuthenticated === null) {
+    toast.info("Verificando autenticación...");
+    console.log("isAuthenticated is null, showing loader");
     return <FullPageLoader />;
   }
 
