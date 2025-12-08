@@ -25,15 +25,6 @@ interface SensorData {
   [key: string]: unknown;
 }
 
-interface ApiError {
-  message: string;
-  code?: string;
-  response?: {
-    data?: unknown;
-    status?: number;
-  };
-}
-
 export const monitorService = {
   fetchResources: async (): Promise<ResourceItem[]> => {
     console.log(`🔥 fetchResources CALLED!`);
@@ -98,7 +89,7 @@ export const monitorService = {
     return filteredSensors;
   },
 
-  setThreshold: async (sensorIp: string, value: number) => {
+   setThreshold: async (sensorIp: string, value: number) => {
     console.log(`🔧 Setting threshold for ${sensorIp} to ${value}`);
     
     const sensorNumber = parseInt(sensorIp.split('.').pop() || '100') - 99;
@@ -108,38 +99,47 @@ export const monitorService = {
     console.log(`💾 Threshold saved in localStorage for ${sensorId}`);
     
     try {
-      console.log(`📡 Attempting to connect to ESP at ${sensorIp}:80`);
+      console.log(`📡 Intentando conectar a ESP en http://${sensorIp}:80/set-threshold?value=${value}`);
       
-      const res = await createEspInstance(sensorIp).get(`/set-threshold?value=${value}`, {
-        timeout: 5000, // Reducir timeout a 5 segundos
-        validateStatus: function (status) {
-          return status >= 200 && status < 300; // Solo considerar 2xx como éxito
-        }
-      });
-      console.log(`✅ ESP responded successfully:`, res.data);
-      return res.data;
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
+      // Usar parámetros en la URL (query string)
+      const espInstance = createEspInstance(sensorIp);
       
-      // Mejorar logging del error
-      console.error(`❌ ESP connection failed to ${sensorIp}:`, {
-        message: apiError.message,
-        code: apiError.code,
-        status: apiError.response?.status,
-        timeout: apiError.code === 'ECONNABORTED' ? 'Request timeout' : 'Connection error'
+      const res = await espInstance.get('/set-threshold', {
+        params: { value: value },
+        timeout: 5000,
+        validateStatus: () => true
       });
       
-      // Si es timeout o error de red, pero el valor se guardó localmente, es parcialmente exitoso
-      if (apiError.code === 'ECONNABORTED' || apiError.message.includes('Network Error')) {
-        console.log(`⚠️ Network error but threshold saved locally`);
+      console.log(`✅ ESP respondió:`, res.status, res.data);
+      
+      if (res.status === 200) {
         return { 
           success: true, 
-          savedLocally: true, 
-          warning: 'ESP no responde pero threshold guardado localmente' 
+          data: res.data,
+          message: 'Threshold actualizado en el ESP'
+        };
+      } else {
+        return { 
+          success: false, 
+          savedLocally: true,
+          status: res.status,
+          message: 'ESP respondió con error'
         };
       }
       
-      return { success: false, savedLocally: true, error: apiError.message };
+    } catch (error: unknown) {
+      const err = error as Error & { code?: string };
+      console.error(`❌ Error conectando ESP:`, {
+        message: err.message,
+        code: err.code,
+        ip: sensorIp
+      });
+      
+      return { 
+        success: false, 
+        savedLocally: true, 
+        message: `No se pudo conectar al ESP en ${sensorIp}. Threshold guardado localmente.` 
+      };
     }
   },
 
