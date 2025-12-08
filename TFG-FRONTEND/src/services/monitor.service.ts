@@ -58,7 +58,7 @@ export const monitorService = {
       console.log(`📋 Sensor ${sensorNumber} final threshold: ${finalThreshold}`);
       
       item.device = {
-        ip: '192.168.137.100',
+        ip: '192.168.137.201',
         name: 'Sensor 1',
         threshold: finalThreshold,
         isReal: true
