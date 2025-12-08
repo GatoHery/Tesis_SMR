@@ -24,7 +24,7 @@ function App() {
 
   useEffect(() => {
     const token = getCookie("token");
-    const run  = async () => {
+  (async () => {
       console.log("token: ", token !== null )
       console.log("token value: ", token)
 
@@ -50,8 +50,8 @@ function App() {
       } else {
         navigate("/login", { replace: true });
       }
-    }
-    
+    })();
+   
     //Comentario de prueba
 
   }, [whoami, navigate]);
