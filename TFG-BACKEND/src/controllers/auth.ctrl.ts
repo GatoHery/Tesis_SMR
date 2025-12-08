@@ -35,7 +35,7 @@ export const googleLogin = async ({ body }: Request, res: Response) => {
     const response = await googleLoginService(code)
 
     res.cookie('token', response.token, {
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000
     })
 
