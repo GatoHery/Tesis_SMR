@@ -33,10 +33,7 @@ function App() {
         try {
           await whoami();
           const authenticatedSession = useAuthStore.getState().isAuthenticated;
-          if (authenticatedSession == true ) {
-            navigate("/", { replace: true });
-          }
-          else {
+          if (authenticatedSession === false ) {
             navigate("/login", { replace: true });
           }
 
@@ -47,9 +44,7 @@ function App() {
           navigate("/login", { replace: true });
 
         };
-      } else {
-        navigate("/login", { replace: true });
-      }
+      } 
     })();
    
     //Comentario de prueba
