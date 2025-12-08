@@ -12,20 +12,38 @@ import Router from "@/routes/router";
 import useThemeStore from "@/store/theme.store";
 import useAuthStore from "@/store/auth.store";
 import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 // ** Utils Imports
 import { getCookie } from "./utils/cookies";
 
 function App() {
   const { darkMode } = useThemeStore();
-  const { whoami} = useAuthStore();
+  const { whoami, isAuthenticated, loading} = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = getCookie("token");
 
 
-    if(token === null ) navigate("/login", { replace: true });
+    if(token !== null ) {
+      try{
+        await whoami();
+
+        if(isAuthenticated == true && loading == false) {
+          navigate("/", { replace: true });
+        }
+        else {
+          navigate("/login", { replace: true });
+        }
+
+
+
+      }catch(error) {
+        toast.error("Error al validar sesión");
+        
+
+    };
     //Comentario de prueba
     
   }, [whoami]);
