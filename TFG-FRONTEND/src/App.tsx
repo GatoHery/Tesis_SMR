@@ -25,9 +25,8 @@ function App() {
     const token = getCookie("token");
 
 
-    if(token !== null ) navigate("/", { replace: true } )
-    //if (token === null) whoami();
-    else navigate("/login", { replace: true });
+    if(token === null ) navigate("/login", { replace: true });
+    
   }, [whoami]);
 
   return (
