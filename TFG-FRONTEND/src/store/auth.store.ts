@@ -38,8 +38,8 @@ const useAuthStore = create<AuthState>()(
           role: user.role.name
         };
 
-        setCookie("token", token, 1);
-        setCookie("user", JSON.stringify(formattedUser), 1);
+        setCookie("token", token );
+        setCookie("user", JSON.stringify(formattedUser));
 
         set({
           user: formattedUser,
@@ -68,8 +68,8 @@ const useAuthStore = create<AuthState>()(
         };
 
         console.log("Microsoft login data: ", JSON.stringify(user));
-        setCookie("token", token, 1);
-        setCookie("user", JSON.stringify(user), 1);
+        setCookie("token", token);
+        setCookie("user", JSON.stringify(user));
 
         set({
           user: formattedUser,
@@ -103,7 +103,7 @@ const useAuthStore = create<AuthState>()(
           role: data.role.name,
         }
 
-        setCookie("user", JSON.stringify(user), 1);
+        setCookie("user", JSON.stringify(user));
         set({
           user,
           token: getCookie("token"),
