@@ -6,7 +6,7 @@ import { Navigate } from "react-router";
 import { toast } from "react-toastify";
 import FullPageLoader from "@/components/FullPageLoader";
 
-// ** Zustand and Component Imports
+// ** Zustand and Component Imports 
 import useAuthStore from "@/store/auth.store";
 
 interface ProtectedRouteProps {
@@ -21,7 +21,7 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
   if(isAuthenticated === null) {
     toast.info("Verificando autenticación...");
     console.log("isAuthenticated is null, showing loader");
-    return <FullPageLoader />;
+    return <FullPageLoader/>;
   }
 
   

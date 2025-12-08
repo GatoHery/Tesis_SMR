@@ -18,13 +18,15 @@ import { getCookie } from "./utils/cookies";
 
 function App() {
   const { darkMode } = useThemeStore();
-  const { whoami } = useAuthStore();
+  const { whoami} = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = getCookie("token");
 
-    if (token) whoami();
+
+    if(token !== null ) navigate("/", { replace: true } )
+    //if (token === null) whoami();
     else navigate("/login", { replace: true });
   }, [whoami]);
 
