@@ -19,7 +19,7 @@ type SensorState = {
   initializeWebsocket: () => void;
 };
 
-const useSensorStore = create<SensorState>()((set) => ({
+const useSensorStore = create<SensorState>()((set, get) => ({
   sensors: [],
   loading: true,
   isAlarmSetting: false,
@@ -58,20 +58,43 @@ const useSensorStore = create<SensorState>()((set) => ({
     }
   },
 
-  setAlarm: async (sensorIp, value) => {
-    set({ isAlarmSetting: true });
+  setAlarm: async (sensorIp: string, value: boolean) => {
+    set({
+      isAlarmSetting: true,
+      error: null,
+    }); /* actualización del estado global para limpiar errores anteriores y deshabilitar el switch mientras se guardan cambios*/
 
     try {
-      await monitorService.setAlarm(sensorIp, value);
+      const sensor = get().sensors.find(
+        (s) => s.ip === sensorIp
+      ); /* lectura del estado actual y encontrar el sensor al que se le están haciendo modificaciones */
+      if (!sensor) {
+        throw new Error(
+          `Sensor not found: ${sensorIp}`
+        ); /* si no se encuentra el sensor se lanza un error */
+      }
+
+      const updated = await monitorService.upsertSensor({
+        ip: sensor.ip,
+        name: sensor.name,
+        location: sensor.location,
+        currentReading: sensor.currentReading,
+        notifications: sensor.notifications,
+        alarm: value,
+        threshold: sensor.threshold,
+      }); /* se llama al servicio donde se manda un payload con los datos completos del sensor que se está modificando */
+
       set((state) => ({
+        sensors: state.sensors.map((s) => (s.ip === sensorIp ? updated : s)),
         isAlarmSetting: false,
-        sensors: state.sensors.map((sensor) =>
-          sensor.ip === sensorIp ? { ...sensor, alarm: value } : sensor
-        ),
-      }));
+      })); /* se busca el sensor cuya ip coincida con la recibida y se reemplaza ese sensor con el actualizado */
     } catch (error) {
-      console.error(`Error setting alarm for sensor ${sensorIp}:`, error);
-      set({ error: "Failed to set alarm...", isAlarmSetting: false });
+      console.error("setAlarm error:", error);
+      set({
+        isAlarmSetting: false,
+        error: "Failed to update alarm",
+      });
+      throw error;
     }
   },
 
@@ -92,20 +115,34 @@ const useSensorStore = create<SensorState>()((set) => ({
     }
   },
 
-  setThreshold: async (sensorIp, value) => {
-    set({ isThresholdSetting: true });
+  setThreshold: async (sensorIp: string, value: number) => {
+    set({ isThresholdSetting: true, error: null });
 
     try {
-      await monitorService.setThreshold(sensorIp, value);
+      const sensor = get().sensors.find((s) => s.ip === sensorIp);
+      if (!sensor) throw new Error("Sensor not found");
+
+      const updated = await monitorService.upsertSensor({
+        ip: sensor.ip,
+        name: sensor.name,
+        location: sensor.location,
+        currentReading: sensor.currentReading,
+        notifications: sensor.notifications,
+        alarm: sensor.alarm,
+        threshold: value,
+      });
+
       set((state) => ({
+        sensors: state.sensors.map((s) => (s.ip === sensorIp ? updated : s)),
         isThresholdSetting: false,
-        sensors: state.sensors.map((sensor) =>
-          sensor.ip === sensorIp ? { ...sensor, threshold: value } : sensor
-        ),
       }));
     } catch (error) {
-      console.error(`Error setting threshold for sensor ${sensorIp}:`, error);
-      set({ error: "Failed to set threshold...", isThresholdSetting: false });
+      console.error("setThreshold error:", error);
+      set({
+        isThresholdSetting: false,
+        error: "Failed to update threshold",
+      });
+      throw error;
     }
   },
 
