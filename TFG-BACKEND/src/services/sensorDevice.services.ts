@@ -20,19 +20,28 @@ export const upsertSensorDeviceService = async (data: {
 }) => {
   try {
     // Usamos data.ip como _id
+
+    
+
+
+    const updateFields: Record<string, any> = {
+        lastUpdated: new Date()
+    };
+
+    if (typeof data.name !== "undefined") updateFields.name = data.name;
+    if (typeof data.location !== "undefined") updateFields.location = data.location;
+    if (typeof data.ip !== "undefined") updateFields._ip = data.ip;
+    if (typeof data.currentReading !== "undefined")
+      updateFields.currentReading = data.currentReading;
+    if (typeof data.notifications !== "undefined")
+      updateFields.notifications = Boolean(data.notifications);
+    if (typeof data.alarm !== "undefined") updateFields.alarm = data.alarm;
+    if (typeof data.threshold !== "undefined")
+      updateFields.threshold = data.threshold;
+
     const sensorDevice = await SensorDevice.findOneAndUpdate(
       { _id: data.ip },
-      {
-        _id: data.ip,              // fija el ID
-        name: data.name,
-        location: data.location,
-        ip: data.ip,
-        currentReading: data.currentReading,
-        notifications: data.notifications,
-        alarm: data.alarm,
-        threshold: data.threshold,
-        lastUpdated: new Date()
-      },
+      { $set: updateFields},
       { new: true, upsert: true }
     );
 
