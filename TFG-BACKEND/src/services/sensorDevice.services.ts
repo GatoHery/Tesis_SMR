@@ -30,7 +30,7 @@ export const upsertSensorDeviceService = async (data: {
 
     if (typeof data.name !== "undefined") updateFields.name = data.name;
     if (typeof data.location !== "undefined") updateFields.location = data.location;
-    if (typeof data.ip !== "undefined") updateFields._ip = data.ip;
+    if (typeof data.ip !== "undefined") updateFields.ip = data.ip;
     if (typeof data.currentReading !== "undefined")
       updateFields.currentReading = data.currentReading;
     if (typeof data.notifications !== "undefined")
