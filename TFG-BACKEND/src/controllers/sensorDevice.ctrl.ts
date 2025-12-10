@@ -21,9 +21,9 @@ export const upsertSensorDevice = async (req: Request, res: Response) => {
       name,
       location,
       currentReading,
-      notifications = false,
-      alarm = false,
-      threshold = 0,
+      notifications,
+      alarm,
+      threshold,
     } = req.body;
 
     if (!ip) {
