@@ -124,11 +124,11 @@ const SensorCardContent = ({
         <Flex justify="space-between" align="center">
           <Typography.Text type="secondary">Alarma:</Typography.Text>
           {/* se cambio en el switch la prop value por checked y se añadieron props que inhabilitan el switch cuando se está guardando los datos */}
-          <Switch checked={alarm} onChange={(value) => handleAlarm(value)} loading={isAlarmSetting} disabled={isAlarmSetting} /> 
+          <Switch key={`alarm-${ip}`} checked={alarm} onChange={(value) => handleAlarm(value)} loading={isAlarmSetting} disabled={isAlarmSetting} /> 
         </Flex>
         <Flex justify="space-between" align="center">
           <Typography.Text type="secondary">Notificaciones:</Typography.Text>
-          <Switch checked={notifications} onChange={(value) => handleNotifications(value)} />
+          <Switch key={`notifications-${ip}`} checked={notifications} onChange={(value) => handleNotifications(value)} />
         </Flex>
 
         <InfoRow 
