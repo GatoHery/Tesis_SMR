@@ -38,26 +38,16 @@ export const monitorService = {
     const filteredResources = res.data.slice(0, 1) as ResourceItem[];
 
     filteredResources.forEach((item: ResourceItem) => {
-      const sensorNumber = 1;
-      const sensorId = `sensor_${sensorNumber}`;
-
-      const savedThreshold = localStorage.getItem(`threshold_${sensorId}`);
-      console.log(
-        `🔍 Sensor ${sensorNumber}: savedThreshold = ${savedThreshold}`
-      );
-
-      const finalThreshold = savedThreshold ? parseInt(savedThreshold) : 85;
-
-      console.log(
-        `📋 Sensor ${sensorNumber} final threshold: ${finalThreshold}`
-      );
-
       item.device = {
         ip: "192.168.137.201",
         name: "Sensor 1",
-        threshold: finalThreshold,
+        threshold: item.device?.threshold || 85,
         isReal: true,
       };
+
+      console.log(
+        `📋 Sensor final threshold: ${item.device.threshold}`
+      );
     });
 
     return filteredResources;
@@ -77,25 +67,13 @@ export const monitorService = {
     const filteredSensors = res.data.slice(0, 1) as SensorData[];
 
     filteredSensors.forEach((sensor: SensorData) => {
-      const sensorNumber = 1;
-      const sensorId = `sensor_${sensorNumber}`;
-
-      const savedThreshold = localStorage.getItem(`threshold_${sensorId}`);
-      console.log(
-        `🔍 Sensor ${sensorNumber}: savedThreshold = ${savedThreshold}`
-      );
-
-      // Configurar el único sensor real
-      sensor.threshold = savedThreshold
-        ? parseInt(savedThreshold)
-        : sensor.threshold || 85;
-
+      // El threshold viene del backend, ya que se actualiza en setThreshold
       sensor.ip = "192.168.137.201";
       sensor.name = sensor.name || "Sensor 1";
       sensor.isReal = true;
 
       console.log(
-        `📋 Sensor ${sensorNumber} final threshold: ${sensor.threshold}, IP: ${sensor.ip}`
+        `📋 Sensor final threshold: ${sensor.threshold}, IP: ${sensor.ip}`
       );
     });
 
@@ -105,20 +83,13 @@ export const monitorService = {
   setThreshold: async (sensorIp: string, value: number) => {
     console.log(`🔧 Setting threshold for ${sensorIp} to ${value}`);
 
-    const sensorNumber = parseInt(sensorIp.split(".").pop() || "100") - 99;
-    const sensorId = `sensor_${sensorNumber}`;
-
-    localStorage.setItem(`threshold_${sensorId}`, value.toString());
-    console.log(`💾 Threshold saved in localStorage for ${sensorId}`);
-
     try {
       console.log(
         `📡 Intentando conectar a ESP en http://${sensorIp}:80/set-threshold?value=${value}`
       );
 
-      // Usar parámetros en la URL (query string)
+      // Cambiar en el ESP
       const espInstance = createEspInstance(sensorIp);
-
       const res = await espInstance.get("/set-threshold", {
         params: { value: value },
         timeout: 5000,
@@ -128,15 +99,25 @@ export const monitorService = {
       console.log(`✅ ESP respondió:`, res.status, res.data);
 
       if (res.status === 200) {
+        // 🔥 Actualizar el BACKEND con el nuevo threshold
+        try {
+          await api.patch(`${SENSOR_PATH}`, {
+            ip: sensorIp,
+            threshold: value,
+          });
+          console.log(`💾 Backend actualizado: threshold = ${value} dB`);
+        } catch (error) {
+          console.error(`⚠️ Error actualizando backend:`, error);
+        }
+
         return {
           success: true,
           data: res.data,
-          message: "Threshold actualizado en el ESP",
+          message: "Threshold actualizado en ESP y backend",
         };
       } else {
         return {
           success: false,
-          savedLocally: true,
           status: res.status,
           message: "ESP respondió con error",
         };
@@ -151,8 +132,7 @@ export const monitorService = {
 
       return {
         success: false,
-        savedLocally: true,
-        message: `No se pudo conectar al ESP en ${sensorIp}. Threshold guardado localmente.`,
+        message: `No se pudo conectar al ESP en ${sensorIp}`,
       };
     }
   },
