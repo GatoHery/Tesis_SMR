@@ -58,7 +58,7 @@ export const monitorService = {
   return res.data;
   }, */
 
-  fetchSensors: async (): Promise<SensorData[]> => {
+  /*fetchSensors: async (): Promise<SensorData[]> => {
     console.log(`🔥 fetchSensors CALLED!`);
     const res = await api.get(`${SENSOR_PATH}`, { withCredentials: true });
     console.log(`📊 fetchSensors response:`, res.data);
@@ -78,7 +78,7 @@ export const monitorService = {
     });
 
     return filteredSensors;
-  },
+  },*/
 
   setThreshold: async (sensorIp: string, value: number) => {
     console.log(`🔧 Setting threshold for ${sensorIp} to ${value}`);

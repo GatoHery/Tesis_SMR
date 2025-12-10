@@ -24,7 +24,7 @@ export const getAllResources = async (req: Request, res: Response) => {
   }
 };
 
-/* export const getAllResources = async (req: Request, res: Response) => {
+export const getAllResources = async (req: Request, res: Response) => {
   try {
     const { resources } = await fetchResources();
 
@@ -58,4 +58,4 @@ export const getAllResources = async (req: Request, res: Response) => {
     console.error("Error fetching resources:", error);
     res.status(500).json({ message: "Error fetching resources" });
   }
-}; */
+}; 
