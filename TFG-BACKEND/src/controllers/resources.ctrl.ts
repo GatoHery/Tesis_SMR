@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { fetchResources } from "../services/resources.services";
+/* import { SensorDevice } from "../models/sensorDevice"; */
 
 export const getAllResources = async (req: Request, res: Response) => {
   try {
@@ -22,3 +23,39 @@ export const getAllResources = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error fetching resources" });
   }
 };
+
+/* export const getAllResources = async (req: Request, res: Response) => {
+  try {
+    const { resources } = await fetchResources();
+
+    // Obteniendo recursos del DEI
+    const resourcesInDEI = resources.filter(
+      (resource: any) => resource.location === "DEI"
+    );
+
+    // Sensores reales almacenados en backend
+    const sensors = await SensorDevice.find().lean();
+
+    // Ubicaciones activas (donde hay sensores)
+    const activeLocations = new Set(
+      sensors.map(sensor => sensor.location)
+    );
+
+    // Recursos DEI que además tienen sensores
+    const activeResources = resourcesInDEI.filter(
+      (resource: any) => activeLocations.has(resource.name)
+    );
+
+    // Respuesta simplificada
+    const simplifiedResources = activeResources.map((resource: any) => ({
+      name: resource.name,
+      location: resource.location,
+      maxParticipants: resource.maxParticipants,
+    }));
+
+    res.status(200).json(simplifiedResources);
+  } catch (error) {
+    console.error("Error fetching resources:", error);
+    res.status(500).json({ message: "Error fetching resources" });
+  }
+}; */

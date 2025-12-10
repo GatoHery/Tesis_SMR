@@ -63,6 +63,11 @@ export const monitorService = {
     return filteredResources;
   },
 
+  /* fetchResources: async (): Promise<ResourceItem[]> => {
+  const res = await api.get(`${RESOURCE_PATH}`, { withCredentials: true });
+  return res.data;
+  }, */
+
   fetchSensors: async (): Promise<SensorData[]> => {
     console.log(`🔥 fetchSensors CALLED!`);
     const res = await api.get(`${SENSOR_PATH}`, { withCredentials: true });
