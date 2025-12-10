@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { fetchResources } from "../services/resources.services";
-/* import { SensorDevice } from "../models/sensorDevice"; */
+import { SensorDevice } from "../models/sensorDevice"; 
 
 /*export const getAllResources = async (req: Request, res: Response) => {
   try {
