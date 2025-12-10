@@ -58,7 +58,7 @@ const SensorCardContent = ({
 }: Partial<MonitorCardProps>) => {
   // 🔧 FIX: Usar solo un estado para el threshold actual
   const [localThreshold, setLocalThreshold] = useState(threshold || 50);
-  const { isThresholdSetting, setAlarm, setNotifications, setThreshold, isAlarmSetting } = useSensorStore();
+  const { isThresholdSetting, setAlarm, setNotifications, setThreshold, isAlarmSetting, isNotificationSetting } = useSensorStore();
 
   // 🔧 FIX: Sincronizar cuando cambie el threshold desde el store
   useEffect(() => {
@@ -128,7 +128,7 @@ const SensorCardContent = ({
         </Flex>
         <Flex justify="space-between" align="center">
           <Typography.Text type="secondary">Notificaciones:</Typography.Text>
-          <Switch key={`notifications-${ip}`} checked={notifications} onChange={(value) => handleNotifications(value)} />
+          <Switch key={`notifications-${ip}`} checked={notifications} onChange={(value) => handleNotifications(value)} loading={isNotificationSetting} disabled={isNotificationSetting} />
         </Flex>
 
         <InfoRow 

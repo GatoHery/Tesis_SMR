@@ -99,19 +99,42 @@ const useSensorStore = create<SensorState>()((set, get) => ({
   },
 
   setNotifications: async (sensorIp, value) => {
-    set({ isNotificationSetting: true });
+    set({
+      isNotificationSetting: true,
+      error: null,
+    }); /* actualización del estado global para limpiar errores anteriores y deshabilitar el switch mientras se guardan cambios*/
 
     try {
-      await monitorService.setNotifications(sensorIp, value);
+      const sensor = get().sensors.find(
+        (s) => s.ip === sensorIp
+      ); /* lectura del estado actual y encontrar el sensor al que se le están haciendo modificaciones */
+      if (!sensor) {
+        throw new Error(
+          `Sensor not found: ${sensorIp}`
+        ); /* si no se encuentra el sensor se lanza un error */
+      }
+
+      const updated = await monitorService.upsertSensor({
+        ip: sensor.ip,
+        name: sensor.name,
+        location: sensor.location,
+        currentReading: sensor.currentReading,
+        notifications: value,
+        alarm: sensor.alarm,
+        threshold: sensor.threshold,
+      }); /* se llama al servicio donde se manda un payload con los datos completos del sensor que se está modificando */
+
       set((state) => ({
+        sensors: state.sensors.map((s) => (s.ip === sensorIp ? updated : s)),
         isNotificationSetting: false,
-        sensors: state.sensors.map((sensor) =>
-          sensor.ip === sensorIp ? { ...sensor, notifications: value } : sensor
-        ),
-      }));
+      })); /* se busca el sensor cuya ip coincida con la recibida y se reemplaza ese sensor con el actualizado */
     } catch (error) {
-      console.error(`Error setting alarm for sensor ${sensorIp}:`, error);
-      set({ error: "Failed to set alarm...", isNotificationSetting: false });
+      console.error("setNotifications error:", error);
+      set({
+        isNotificationSetting: false,
+        error: "Failed to update notifications",
+      });
+      throw error;
     }
   },
 
