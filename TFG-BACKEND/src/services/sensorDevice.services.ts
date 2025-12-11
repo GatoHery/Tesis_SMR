@@ -21,9 +21,6 @@ export const upsertSensorDeviceService = async (data: {
   try {
     // Usamos data.ip como _id
 
-    
-
-
     const updateFields: Record<string, any> = {
         lastUpdated: new Date()
     };

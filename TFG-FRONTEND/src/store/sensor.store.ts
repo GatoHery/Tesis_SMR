@@ -78,10 +78,7 @@ const useSensorStore = create<SensorState>()((set, get) => ({
         ip: sensor.ip,
         name: sensor.name,
         location: sensor.location,
-        currentReading: sensor.currentReading,
-        notifications: sensor.notifications,
         alarm: value,
-        threshold: sensor.threshold,
       }); /* se llama al servicio donde se manda un payload con los datos completos del sensor que se está modificando */
 
       set((state) => ({
@@ -118,10 +115,7 @@ const useSensorStore = create<SensorState>()((set, get) => ({
         ip: sensor.ip,
         name: sensor.name,
         location: sensor.location,
-        currentReading: sensor.currentReading,
         notifications: value,
-        alarm: sensor.alarm,
-        threshold: sensor.threshold,
       }); /* se llama al servicio donde se manda un payload con los datos completos del sensor que se está modificando */
 
       set((state) => ({
@@ -149,9 +143,6 @@ const useSensorStore = create<SensorState>()((set, get) => ({
         ip: sensor.ip,
         name: sensor.name,
         location: sensor.location,
-        currentReading: sensor.currentReading,
-        notifications: sensor.notifications,
-        alarm: sensor.alarm,
         threshold: value,
       });
 
