@@ -6,6 +6,6 @@ export const alertService = {
   fetchAlerts: async () => {
     const res = await api.get(`${ALERT_PATH}`, { withCredentials: true });
 
-    return res.data;
+    return res.data.reverse(); // Invertir: mostrar alertas nuevas primero
   },
 };
