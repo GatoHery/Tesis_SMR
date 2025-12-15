@@ -49,8 +49,7 @@ const Sensors = () => {
                 name={sensor.name}
                 description={sensor.location}
                 currentReading={sensor.currentReading}
-                // pasar updatedAt/createdAt como lastAlert para mostrar la última alerta
-                lastAlert={(sensor as any).lastAlert || (sensor as any).updatedAt || (sensor as any).createdAt}
+                // lastAlert={sensor.lastAlert}
                 threshold={sensor.threshold}
                 notifications={sensor.notifications}
                 alarm={sensor.alarm}

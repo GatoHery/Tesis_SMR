@@ -11,23 +11,22 @@ type MonitorCardProps = {
   description: string;
   maxParticipants?: number;
   currentReading?: number;
-  lastAlert?: string | number | Date | null;
+  lastAlert?: string;
   threshold?: number;
   notifications?: boolean;
   alarm?: boolean;
 }
 
-const formatTimeDiff = (timestamp?: string | number | Date | null) => {
-  if (!timestamp) return "Ninguna";
-  const time = typeof timestamp === "number" ? timestamp : new Date(timestamp).getTime();
-  if (isNaN(time)) return "Ninguna";
+const formatTimeDiff = (timestamp: string) => {
+  const diff = Date.now() - new Date(timestamp).getTime();
 
-  const diff = Date.now() - time;
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 60) return `Hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
+  if (minutes < 60)
+    return `Hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
 
   const hours = Math.floor(diff / 3600000);
-  if (hours < 24) return `Hace ${hours} hora${hours !== 1 ? "s" : ""}`;
+  if (hours < 24)
+    return `Hace ${hours} hora${hours !== 1 ? "s" : ""}`;
 
   const days = Math.floor(diff / 86400000);
   return `Hace ${days} día${days !== 1 ? "s" : ""}`;
@@ -118,7 +117,7 @@ const SensorCardContent = ({
 
       <InfoRow label="Lectura actual" value={currentReading && `${currentReading} dB`} />
 
-      <InfoRow label="Última alerta" value={lastAlert ? formatTimeDiff(lastAlert) : "Ninguna"}  />
+      <InfoRow label="Última alerta" value={lastAlert && formatTimeDiff(lastAlert)} />
 
       <Divider orientation="left" plain orientationMargin="0">Configuración</Divider>
       <Flex vertical gap={6}>
