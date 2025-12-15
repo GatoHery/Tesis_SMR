@@ -49,7 +49,7 @@ const Sensors = () => {
                 name={sensor.name}
                 description={sensor.location}
                 currentReading={sensor.currentReading}
-                // lastAlert={sensor.lastAlert}
+                lastAlert={sensor.lastAlert}
                 threshold={sensor.threshold}
                 notifications={sensor.notifications}
                 alarm={sensor.alarm}

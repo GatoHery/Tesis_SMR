@@ -16,4 +16,5 @@ export interface Sensor {
   threshold: number
   updatedAt: string
   uid: string
+  lastAlert?: string
 }

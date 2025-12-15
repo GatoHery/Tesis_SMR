@@ -46,6 +46,7 @@ const useSensorStore = create<SensorState>()((set, get) => ({
         updatedAt: item.updatedAt,
         uid: item.uid, // Add the required uid property
         // Add any other required properties from Sensor type here
+        lastAlert: item.lastAlert,
       }));
       set({
         sensors: transformed,
