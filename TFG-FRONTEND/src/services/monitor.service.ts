@@ -75,8 +75,9 @@ export const monitorService = {
         
         // Obtener la última alerta (la más reciente)
         if (alerts && alerts.length > 0) {
-          // Las alertas ya vienen ordenadas de más nueva a más vieja (reversed)
-          const lastAlert = alerts[0];
+          // Invertir para que la más reciente esté primero
+          const reversedAlerts = alerts.reverse();
+          const lastAlert = reversedAlerts[0];
           sensor.lastAlert = lastAlert.timestamp || lastAlert.createdAt;
           console.log(`📢 Última alerta para ${sensor.ip}: ${sensor.lastAlert}`);
         }
