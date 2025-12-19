@@ -86,7 +86,7 @@ const Login = () => {
                   />
                   Continuar con Google UCA
                 </Button>
-                {/*                     <Button
+                {/* <Button
                       onClick={() => OAuthMicrosoftlogin()}
                       type="default"
                       style={ButtonCSS}
@@ -98,7 +98,7 @@ const Login = () => {
                       />
                       Continuar con Microsoft UCA
                     </Button>
- */}
+                 */}
               </Flex>
             </Card>
           </div>
