@@ -86,6 +86,12 @@ const Login = () => {
                   />
                   Continuar con Google UCA
                 </Button>
+
+                <img
+                  src="../../assets/uca_blue_mob.png"
+                  alt="Universidad Centroamericana"
+                  style={{ width: 80, marginBottom: 10 }}
+                />
                 {/* <Button
                       onClick={() => OAuthMicrosoftlogin()}
                       type="default"
