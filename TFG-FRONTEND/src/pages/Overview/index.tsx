@@ -12,7 +12,7 @@ import Barchart from "@/components/Charts/Barchart";
 import Linechart from "@/components/Charts/Linechart";
 import DataCardList from "@/components/DataCardList";
 import AlertsTable from "@/components/GenericTable/Alerts";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useAlertStore from "@/store/alert.store";
 import useDashboardStore from "@/store/dashboard.store";
 
@@ -76,8 +76,6 @@ const Overview = () => {
     },
   ];
 
-  const [pageSize, setPageSize] = useState(10);
-
   useEffect(() => {
     fetchAlerts();
     fetchMetrics();
@@ -118,10 +116,10 @@ const Overview = () => {
             <Card variant="borderless">
               <Title level={5}>Alertas recientes</Title>
               <Paragraph type="secondary">
-                Últimas {pageSize} alertas registradas
+                Últimas 10 alertas registradas
               </Paragraph>
               <div className="ant-list-box table-responsive">
-                <AlertsTable onPageSizeChange={setPageSize} />
+                <AlertsTable />
               </div>
             </Card>
           </Col>

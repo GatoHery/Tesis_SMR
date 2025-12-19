@@ -2,11 +2,7 @@ import GenericTable from "@/components/GenericTable";
 import { getAlertColumns } from "@/components/GenericTable/Alerts/Columns";
 import useAlertStore from "@/store/alert.store";
 
-type AlertsTableProps = {
-  onPageSizeChange?: (size:number) => void;
-}
-
-const AlertsTable = ({onPageSizeChange}: AlertsTableProps) => {
+const AlertsTable = () => {
   const { alerts, loading } = useAlertStore();
   // const data: Alert[] = [
   //   {
@@ -47,16 +43,8 @@ const AlertsTable = ({onPageSizeChange}: AlertsTableProps) => {
       loading={loading}
       dataSource={alerts}
       rowKey={(record) => record.uid}
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        pageSizeOptions: ["5", "10", "25", "50", "100"],
-        onShowSizeChange: (_, size) => {
-          onPageSizeChange?.(size);
-        },
-      }}
     />
-  );
-};
+  )
+}
 
-export default AlertsTable;
+export default AlertsTable

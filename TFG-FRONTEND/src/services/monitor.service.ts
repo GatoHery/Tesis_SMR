@@ -22,6 +22,7 @@ interface SensorData {
   name?: string;
   threshold?: number;
   isReal?: boolean;
+  lastAlert?: string;
   [key: string]: unknown;
 }
 
@@ -66,7 +67,24 @@ export const monitorService = {
     // FILTRAR: Solo tomar el primer sensor (tu ESP real)
     const filteredSensors = res.data.slice(0, 1) as SensorData[];
 
-    filteredSensors.forEach((sensor: SensorData) => {
+    // 🔥 Traer la última alerta para cada sensor
+    for (const sensor of filteredSensors) {
+      try {
+        const alertRes = await api.get(`/api/sound-detection`, { withCredentials: true });
+        const alerts = alertRes.data;
+        
+        // Obtener la última alerta (la más reciente)
+        if (alerts && alerts.length > 0) {
+          // Invertir para que la más reciente esté primero
+          const reversedAlerts = alerts.reverse();
+          const lastAlert = reversedAlerts[0];
+          sensor.lastAlert = lastAlert.timestamp || lastAlert.createdAt;
+          console.log(`📢 Última alerta para ${sensor.ip}: ${sensor.lastAlert}`);
+        }
+      } catch (error) {
+        console.error(`⚠️ Error fetching last alert for ${sensor.ip}:`, error);
+      }
+
       // El threshold viene del backend, ya que se actualiza en setThreshold
       sensor.ip = "192.168.137.201";
       sensor.name = sensor.name || "Sensor 1";
@@ -75,7 +93,7 @@ export const monitorService = {
       console.log(
         `📋 Sensor final threshold: ${sensor.threshold}, IP: ${sensor.ip}`
       );
-    });
+    }
 
     return filteredSensors;
   },
