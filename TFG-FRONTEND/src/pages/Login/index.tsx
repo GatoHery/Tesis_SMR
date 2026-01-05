@@ -88,9 +88,9 @@ const Login = () => {
                 </Button>
 
                 <img
-                  src="../../assets/uca_blue_mob.png"
+                  src="../../assets/img/uca_blue_mob.png"
                   alt="Universidad Centroamericana"
-                  style={{ width: 80, marginBottom: 10 }}
+                  style={{ width: 80, marginBottom: 40, alignSelf: "center" }}
                 />
                 {/* <Button
                       onClick={() => OAuthMicrosoftlogin()}
