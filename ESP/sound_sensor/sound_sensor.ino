@@ -4,6 +4,7 @@
 #include <ESP8266WebServer.h>
 #include <pgmspace.h>
 #include <BearSSLHelpers.h>
+#include <ArduinoJson.h>
 
 
 // Pines
@@ -18,6 +19,13 @@ int detectionCount = 0;                      // Contador de detecciones
 const int DETECTION_LIMIT = 3;               // Límite para activar (3 veces)
 unsigned long lastDetectionTime = 0;         // Tiempo de última detección
 const unsigned long RESET_INTERVAL = 30000;  // 30s para reiniciar contador
+bool eventInProgress = false;
+
+unsigned long lastAlarmTime = 0;
+const unsigned long ALARM_COOLDOWN = 30000; // 30 segundos
+
+unsigned long lastDetectionIncrement = 0;
+const unsigned long DETECTION_STEP = 1000; // 1 segundo
 
 // Configuración de red estática - CORREGIR GATEWAY
 IPAddress local_IP(192, 168, 137, 201);
@@ -94,7 +102,8 @@ void reportToBackend(float dB) {
     return;
   }
 
-  
+
+  StaticJsonDocument<200> workValues;
   HTTPClient reportHttp;
   reportHttp.begin(client, reportUrl);  // <— Correcto: incluir client
   reportHttp.addHeader("Content-Type", "application/json");
@@ -102,13 +111,15 @@ void reportToBackend(float dB) {
   String payload = "{";
   payload += "\"ip\":\"" + String(ip) + "\",";
   payload += "\"name\":\"" + String(sensorName) + "\",";
-  payload += "\"location\":\"" + String(sensorLocation) + "\",";
-  payload += "\"currentReading\":" + String(dB, 2) + ",";
-  payload += "\"notifications\":" + String(notification ? "true" : "false") + ",";
+  payload += "\"sensorLocation\":\"" + String(sensorLocation) + "\",";
+  payload += "\"decibels\":" + String(dB, 2) + ",";
+  payload += "\"notification\":" + String(notification ? "true" : "false") + ",";
   payload += "\"alarm\":" + String(alarm ? "true" : "false") + ",";
-  payload += "\"threshold\":" + String(THRESHOLD_DB);
+  payload += "\"threshold\":" + String(THRESHOLD_DB) + ",";
+  payload += "\"detectionCount\":" + String(detectionCount);
   payload += "}";
 
+  
 
 
   Serial.println("📡 Reportando al backend:");
@@ -119,6 +130,35 @@ void reportToBackend(float dB) {
 
   String resp = reportHttp.getString();
   Serial.printf("📬 HTTP %d — %s\n", code, resp.c_str());
+
+  
+  
+
+  if (code >= 200 && code < 300) {
+    if(resp.length() > 0){
+      DeserializationError error = deserializeJson(workValues, resp);
+      if (!error) {
+
+  if (workValues.containsKey("threshold")) {
+    THRESHOLD_DB = workValues["threshold"];
+    Serial.printf("🎚️ Threshold actualizado desde backend: %.1f\n", THRESHOLD_DB);
+  }
+
+  if (workValues.containsKey("alarm")) {
+    alarm = workValues["alarm"];
+    Serial.printf("🔔 Alarm actualizado desde backend: %s\n", alarm ? "ON" : "OFF");
+  }
+}
+    else {
+      Serial.print("❌ Error asignando valores al ESP");
+    }
+    }
+
+    
+  }
+  else{
+    Serial.print("❌ Error asignando valores al ESP");
+  }
 
   reportHttp.end();
 }
@@ -277,22 +317,30 @@ void loop() {
   Serial.printf("📏 Amp:%d  Volt:%.2fV  dB:%.1f  Th:%.1f\n",
                 amplitude, voltageAmp, dB, THRESHOLD_DB);
 
+    unsigned long currentMillis = millis();
+                
   // Reporte periódico
-  if (millis() - lastReportTime >= reportInterval) {
-    lastReportTime = millis();
+  if (currentMillis - lastReportTime >= reportInterval) {
+    lastReportTime = currentMillis;
     reportToBackend(dB);
   }
 
   // Reinicia contador si pasó mucho
-  if ((millis() - lastDetectionTime > RESET_INTERVAL) && detectionCount > 0) {
+  if ((currentMillis - lastDetectionTime > RESET_INTERVAL) && detectionCount > 0) {
     detectionCount = 0;
     Serial.println("⏰ Contador de detecciones reiniciado");
   }
 
+  if (eventInProgress || (currentMillis - lastAlarmTime < ALARM_COOLDOWN)) {
+    delay(200);
+    return;
+  }
+
   // Detección y envío al backend
-  if (dB >= THRESHOLD_DB) {
+  if (dB >= THRESHOLD_DB && (currentMillis - lastDetectionIncrement >= DETECTION_STEP)) {
     detectionCount++;
-    lastDetectionTime = millis();
+    lastDetectionTime = currentMillis;
+    lastDetectionIncrement = currentMillis;
     Serial.printf("🚨 Detección alta #%d\n", detectionCount);
 
     if (WiFi.status() == WL_CONNECTED) {
@@ -318,7 +366,8 @@ void loop() {
           && detectionCount >= DETECTION_LIMIT
           && alarm) {
         Serial.println("🎯 ACTIVANDO alarma!");
-        buzzerActive = true;
+        eventInProgress = true;
+        lastAlarmTime = currentMillis;
         tone(BUZZER, 1000);
         digitalWrite(RELAY, LOW);
         delay(10000);
@@ -326,6 +375,7 @@ void loop() {
         digitalWrite(RELAY, HIGH);
         buzzerActive = false;
         detectionCount = 0;
+        eventInProgress = false;
       }
 
       if (detectionCount >= 3) {

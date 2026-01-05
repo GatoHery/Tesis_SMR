@@ -86,13 +86,7 @@ const Login = () => {
                   />
                   Continuar con Google UCA
                 </Button>
-
-                <img
-                  src="../../assets/uca_blue_mob.png"
-                  alt="Universidad Centroamericana"
-                  style={{ width: 80, marginBottom: 10 }}
-                />
-                {/* <Button
+                {/*                     <Button
                       onClick={() => OAuthMicrosoftlogin()}
                       type="default"
                       style={ButtonCSS}
@@ -104,7 +98,7 @@ const Login = () => {
                       />
                       Continuar con Microsoft UCA
                     </Button>
-                 */}
+ */}
               </Flex>
             </Card>
           </div>

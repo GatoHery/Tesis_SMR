@@ -23,7 +23,6 @@ import { reservationEmitter } from "../emitters/reservation.emitter";
 import { resourcesEmitter } from "../emitters/resources.emitter";
 import { sensorEmitter } from "../emitters/sensor.emitter";
 import { soundEmitter } from "../emitters/sound.emitter";
-import { startReservationSensorJob } from "../jobs/startReservationSensorJob";
 
 dotenv.config();
 
@@ -61,6 +60,7 @@ class Server {
       },
 
       transports: ["websocket", "polling"],
+ 
     });
 
     /* inicializando webSocket */
@@ -86,18 +86,14 @@ class Server {
     console.log("Initializing Socket...");
     this.io.on("connection", (socket: Socket) => {
       console.log(`🔌 Client connected: ${socket.id}`);
-      socket.on("error", (error) =>
-        console.error(`❌ Socket error (${socket.id}):`, error)
-      );
-      socket.on("disconnect", (reason) =>
-        console.log(`❌ Client disconnected (${socket.id}): ${reason}`)
-      );
+      socket.on("error", (error) => console.error(`❌ Socket error (${socket.id}):`, error));
+      socket.on("disconnect", (reason) => console.log(`❌ Client disconnected (${socket.id}): ${reason}`));
     });
 
-    this.io.engine.on("connection_error", (err: any) => {
-      console.error("Socket.IO engine connection_error:", err);
-    });
-
+  this.io.engine.on("connection_error", (err: any) => {
+    console.error("Socket.IO engine connection_error:", err);
+  });
+ 
     /*
     console.log("Initializing Socket...");
         this.io.on("connection", (socket: Socket) => {
@@ -142,9 +138,6 @@ class Server {
   listen() {
     this.server.listen(this.port, () => {
       console.log(`🚀 Server running on port ${this.port}`);
-      /* job que revisa las reservas activas en el lugar del monitoreo del sensor */
-      startReservationSensorJob();
-      /* emisores de websockets */
       dashboardEmitter.emitDashboardData(this.io, 60000);
       dashboardEmitter.emitHourlyAverages(this.io, 60000);
       dashboardEmitter.emitWeeklyLocationAverages(this.io, 60000);

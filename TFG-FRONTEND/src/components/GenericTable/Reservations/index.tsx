@@ -3,11 +3,7 @@ import { getReservationColumns } from "./Columns";
 import useReservationStore from "@/store/reservation.store";
 import { useEffect } from "react";
 
-type ReservationsTableProps = {
-  onPageSizeChange?: (size:number) => void;
-}
-
-const ReservationsTable = ({ onPageSizeChange }: ReservationsTableProps) => {
+const ReservationsTable = () => {
   const { reservations, loading, initializeWebsocket } = useReservationStore();
 
   useEffect(() => {
@@ -30,9 +26,6 @@ const ReservationsTable = ({ onPageSizeChange }: ReservationsTableProps) => {
         defaultPageSize: 5,
         showSizeChanger: true,
         pageSizeOptions: ["5", "10", "25", "50", "100"],
-        onShowSizeChange: (_, size) => {
-          onPageSizeChange?.(size);
-        },
       }}
     />
   );

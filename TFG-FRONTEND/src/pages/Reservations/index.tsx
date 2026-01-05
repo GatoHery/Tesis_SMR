@@ -94,8 +94,6 @@ const Reservations = () => {
     },
   ];
 
-  const [pageSize, setPageSize] = useState(10);
-
   useEffect(() => {
     initializeWebsocket();
   }, []);
@@ -132,9 +130,7 @@ const Reservations = () => {
             <div className="filter-header">
               <Flex vertical gap={4}>
                 <Title level={5}>Reservas de laboratorios</Title>
-                <Paragraph type="secondary">
-                  Últimas {pageSize} reservas
-                </Paragraph>
+                <Paragraph type="secondary">Últimas 5 reservas</Paragraph>
               </Flex>
               <Flex style={{ marginBottom: "16px" }} gap={8} align="center">
                 <Paragraph type="secondary" style={{ marginBottom: 0 }}>
@@ -157,7 +153,7 @@ const Reservations = () => {
             </div>
 
             <div className="ant-list-box table-responsive">
-              <ReservationsTable onPageSizeChange={setPageSize} />
+              <ReservationsTable />
             </div>
           </Card>
         </Col>

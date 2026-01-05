@@ -25,18 +25,6 @@ const Sensors = () => {
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
 
-  /* variable para poder determinar el tiempo de inactividad de un sensor */
-  const ACTIVE_WINDOWS_MS = 5 * 60 * 1000; // 5 minutos en milisegundos
-
-  const activeSensors = sensors.map((sensor) => {
-    const lastReadingTime = new Date(sensor.updatedAt).getTime();
-    const currentTime = Date.now();
-
-    const isActive = currentTime - lastReadingTime <= ACTIVE_WINDOWS_MS;
-
-    return { ...sensor, isActive };
-  });
-
   return (
     <>
       {loading ? (
@@ -52,8 +40,8 @@ const Sensors = () => {
         </div>
       ) : (
         <Row gutter={[24, 24]}>
-          {activeSensors.length > 0 ? (
-            activeSensors.map((sensor) => (
+          {sensors.length > 0 ? (
+            sensors.map((sensor) => (
               <MonitorCard
                 key={sensor.ip}
                 type="sensor"
