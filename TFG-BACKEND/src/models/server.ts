@@ -4,7 +4,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { dbConnection } from "../database/config";
-import { Server as SocketIOServer, Socket } from "socket.io";
+/* import { Server as SocketIOServer } from "socket.io"; */
 import http from "http";
 import {
   authRoutes,
@@ -18,11 +18,11 @@ import {
 } from "../routes";
 import passport from "passport";
 import "../config/passport";
-import { dashboardEmitter } from "../emitters/dashboard.emitter";
+/* import { dashboardEmitter } from "../emitters/dashboard.emitter";
 import { reservationEmitter } from "../emitters/reservation.emitter";
 import { resourcesEmitter } from "../emitters/resources.emitter";
 import { sensorEmitter } from "../emitters/sensor.emitter";
-import { soundEmitter } from "../emitters/sound.emitter";
+import { soundEmitter } from "../emitters/sound.emitter"; */
 import { startReservationSensorJob } from "../jobs/startReservationSensorJob";
 
 dotenv.config();
@@ -30,7 +30,7 @@ dotenv.config();
 class Server {
   private app: Application;
   private server: http.Server;
-  private io: SocketIOServer;
+/*   private io: SocketIOServer; */
   private port: string | undefined;
 
   // paths declarations
@@ -51,7 +51,7 @@ class Server {
     this.server = http.createServer(this.app);
 
     /* Create Websocket server */
-    this.io = new SocketIOServer(this.server, {
+/*     this.io = new SocketIOServer(this.server, {
       path: process.env.SOCKET_PATH || "/socket.io",
       cors: {
         origin: process.env.FRONTEND_URL || "http://localhost:8080",
@@ -61,10 +61,10 @@ class Server {
       },
 
       transports: ["websocket", "polling"],
-    });
+    }); */
 
     /* inicializando webSocket */
-    this.initializeSocketIO();
+    /* this.initializeSocketIO(); */
 
     this.authPath = "/api/auth";
     this.dashboardPath = "/api/dashboard";
@@ -75,14 +75,14 @@ class Server {
     this.soundDetectionPath = "/api/sound-detection";
     this.userPath = "/api/users";
 
-    this.app.set("socket: Socket", this.io);
+/*     this.app.set("socket: Socket", this.io); */
 
     this.connectingDatabase();
     this.middlewares();
     this.routes();
   }
 
-  private initializeSocketIO() {
+  /*   private initializeSocketIO() {
     console.log("Initializing Socket...");
     this.io.on("connection", (socket: Socket) => {
       console.log(`🔌 Client connected: ${socket.id}`);
@@ -98,16 +98,8 @@ class Server {
       console.error("Socket.IO engine connection_error:", err);
     });
 
-    /*
-    console.log("Initializing Socket...");
-        this.io.on("connection", (socket: Socket) => {
-      console.log("🔌 New client connected");
-
-      socket.on("disconnect", () => {
-        console.log("❌ Client disconnected");
-      });
-    });*/
-  }
+    
+  } */
 
   async connectingDatabase() {
     await dbConnection();
@@ -145,13 +137,13 @@ class Server {
       /* job que revisa las reservas activas en el lugar del monitoreo del sensor */
       startReservationSensorJob();
       /* emisores de websockets */
-      dashboardEmitter.emitDashboardData(this.io, 60000);
+      /* dashboardEmitter.emitDashboardData(this.io, 60000);
       dashboardEmitter.emitHourlyAverages(this.io, 60000);
       dashboardEmitter.emitWeeklyLocationAverages(this.io, 60000);
       reservationEmitter.emitWeeklyReservationSummary(this.io, 60000);
       resourcesEmitter.emitSimplifiedResources(this.io, 60000);
       sensorEmitter.emitAllSensors(this.io, 60000);
-      soundEmitter.emitAllSounds(this.io, 60000);
+      soundEmitter.emitAllSounds(this.io, 60000); */
     });
   }
 }
