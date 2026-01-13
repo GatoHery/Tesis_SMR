@@ -1,43 +1,43 @@
-import { fetchReservations } from './reservation.services'
-import { SensorDevice } from '../models/sensorDevice'
+import { fetchReservations } from "./reservation.services";
+import { SensorDevice } from "../models/sensorDevice";
 
 export const evaluateSensorsAgainstReservations = async () => {
-  const fechaDeHoy = new Date()
+  const todayDate = new Date();
 
-  const inicioDelDia = new Date(fechaDeHoy)
-  inicioDelDia.setHours(0, 0, 0, 0)
+  const startOfDay = new Date(todayDate);
+  startOfDay.setHours(0, 0, 0, 0);
 
-  const finDelDia = new Date(fechaDeHoy)
-  finDelDia.setHours(23, 59, 59, 999)
+  const endOfDay = new Date(todayDate);
+  endOfDay.setHours(23, 59, 59, 999);
 
   const data = await fetchReservations(
-    inicioDelDia.toISOString(),
-    finDelDia.toISOString()
-  )
+    startOfDay.toISOString(),
+    endOfDay.toISOString()
+  );
 
-  const reservations = data.reservations
+  const reservations = data.reservations;
 
-  const sensors = await SensorDevice.find()
+  const sensors = await SensorDevice.find();
 
   for (const sensor of sensors) {
-    const reservaActiva = reservations.some((reserva: any) => {
-      if (reserva.resourceName !== sensor.location) return false
+    const activeReservation = reservations.some((reserva: any) => {
+      if (reserva.resourceName !== sensor.location) return false;
 
-      const inicio = new Date(reserva.startDate)
-      const fin = new Date(reserva.endDate)
+      const start = new Date(reserva.startDate);
+      const end = new Date(reserva.endDate);
 
-      return fechaDeHoy >= inicio && fechaDeHoy <= fin
-    })
+      return todayDate >= start && todayDate <= end;
+    });
 
-    const activacion = !reservaActiva
+    const activacionFlag = !activeReservation;
 
     if (
-      sensor.alarm !== activacion ||
-      sensor.notifications !== activacion
+      sensor.alarm !== activacionFlag ||
+      sensor.notifications !== activacionFlag
     ) {
-      sensor.alarm = activacion
-      sensor.notifications = activacion
-      await sensor.save()
+      sensor.alarm = activacionFlag;
+      sensor.notifications = activacionFlag;
+      await sensor.save();
     }
   }
-}
+};
