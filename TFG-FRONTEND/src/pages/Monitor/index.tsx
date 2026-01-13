@@ -26,15 +26,24 @@ const Sensors = () => {
   }, [websocketEvent, clearWebsocketEvent]);
 
   /* variable para poder determinar el tiempo de inactividad de un sensor */
-  const ACTIVE_WINDOWS_MS = 5 * 60 * 1000; // 5 minutos en milisegundos
+  const tiempoDeEspera = 2 * 60 * 1000; // 2 minutos
 
-  const activeSensors = sensors.map((sensor) => {
+  /* variable para poder determinar el tiempo de inactividad de un sensor */
+  const [tiempoActual, setTiempoActual] = useState(Date.now());
+
+  /* timer que fuerza un re-render */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTiempoActual(Date.now());
+    }, 30000); // cada 30s re-evalúa
+
+    return () => clearInterval(interval);
+  }, []);
+
+  /* se setean los sensores activos de haberlos realmente */
+  const activeSensors = sensors.filter((sensor) => {
     const lastReadingTime = new Date(sensor.updatedAt).getTime();
-    const currentTime = Date.now();
-
-    const isActive = currentTime - lastReadingTime <= ACTIVE_WINDOWS_MS;
-
-    return { ...sensor, isActive };
+    return tiempoActual - lastReadingTime <= tiempoDeEspera;
   });
 
   return (

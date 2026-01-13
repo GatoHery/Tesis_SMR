@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import { Navigate } from "react-router";
 import { useGoogleLogin } from "@react-oauth/google";
-
+import ucaLogo from "../../assets/img/uca_blue_mob.png";
 // ** Zustand store and components imports
 import useAuthStore from "@/store/auth.store";
 import FullPageLoader from "@/components/FullPageLoader";
@@ -88,9 +88,9 @@ const Login = () => {
                 </Button>
 
                 <img
-                  src="../../assets/img/uca_blue_mob.png"
+                  src={ucaLogo}
                   alt="Universidad Centroamericana"
-                  style={{ width: 80, marginBottom: 40, alignSelf: "center" }}
+                  style={{ width: 60, marginBottom: 40, alignSelf: "center" }}
                 />
                 {/* <Button
                       onClick={() => OAuthMicrosoftlogin()}
