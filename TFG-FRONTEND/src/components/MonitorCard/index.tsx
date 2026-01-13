@@ -117,7 +117,7 @@ const SensorCardContent = ({
 
       <InfoRow label="Lectura actual" value={currentReading && `${currentReading} dB`} />
 
-      <InfoRow label="Última alerta" value={lastAlert && formatTimeDiff(lastAlert)} />
+      <InfoRow label="Última alerta" value={lastAlert ? formatTimeDiff(lastAlert) : "Sin registrar"} />
 
       <Divider orientation="left" plain orientationMargin="0">Configuración</Divider>
       <Flex vertical gap={6}>
