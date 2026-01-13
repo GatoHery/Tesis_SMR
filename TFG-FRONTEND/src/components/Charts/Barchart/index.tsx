@@ -13,9 +13,9 @@ const Barchart = () => {
     weeklyAverages,
     loadingWeekly,
     fetchWeeklyAverages,
-    initializeWebsocket,
+/*     initializeWebsocket,
     websocketEvent,
-    clearWebsocketEvent,
+    clearWebsocketEvent, */
   } = useDashboardStore();
   const { darkMode } = useThemeStore();
 
@@ -80,14 +80,14 @@ const Barchart = () => {
 
   useEffect(() => {
     fetchWeeklyAverages();
-    initializeWebsocket();
+/*     initializeWebsocket(); */
   }, []);
-
+/* 
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]);
+  }, [websocketEvent, clearWebsocketEvent]); */
 
   return (
     <>

@@ -9,21 +9,21 @@ const Sensors = () => {
     sensors,
     loading,
     fetchSensors,
-    initializeWebsocket,
+/*     initializeWebsocket,
     websocketEvent,
-    clearWebsocketEvent,
+    clearWebsocketEvent, */
   } = useSensorStore();
 
   useEffect(() => {
     fetchSensors();
-    initializeWebsocket();
+ /*    initializeWebsocket(); */
   }, [fetchSensors]);
-
+/* 
   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]);
+  }, [websocketEvent, clearWebsocketEvent]); */
 
   /* variable para poder determinar el tiempo de inactividad de un sensor */
   const tiempoDeEspera = 2 * 60 * 1000; // 2 minutos
@@ -97,21 +97,21 @@ const Locations = () => {
     resources,
     loading,
     fetchResources,
-    initializeWebsocket,
+/*     initializeWebsocket,
     websocketEvent,
-    clearWebsocketEvent,
+    clearWebsocketEvent, */
   } = useResourceStore();
 
   useEffect(() => {
     fetchResources();
-    initializeWebsocket();
+/*     initializeWebsocket(); */
   }, [fetchResources]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]);
+  }, [websocketEvent, clearWebsocketEvent]); */
   return (
     <>
       {loading ? (

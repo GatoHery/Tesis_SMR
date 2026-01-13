@@ -24,9 +24,9 @@ const Overview = () => {
     metrics,
     fetchMetrics,
     loading,
-    initializeWebsocket,
+/*     initializeWebsocket,
     clearWebsocketEvent,
-    websocketEvent,
+    websocketEvent, */
   } = useDashboardStore();
 
   const { Title, Paragraph } = Typography;
@@ -81,15 +81,15 @@ const Overview = () => {
   useEffect(() => {
     fetchAlerts();
     fetchMetrics();
-    initializeWebsocket();
+/*     initializeWebsocket(); */
   }, [fetchAlerts, fetchMetrics]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (!websocketEvent) return;
 
     clearWebsocketEvent();
   }, [websocketEvent, clearWebsocketEvent]);
-
+ */
   return (
     <>
       <Flex vertical gap={24}>

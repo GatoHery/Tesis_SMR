@@ -2,7 +2,7 @@ import { Reservation, ReservationStats } from "@/types/reservation.type";
 import { reservationService } from "@/services/reservation.service";
 import { create } from "zustand";
 import { Dayjs } from "dayjs";
-import socket from "@/services/socket.client";
+/* import socket from "@/services/socket.client"; */
 
 type ReservationState = {
   reservations: Reservation[];
@@ -10,11 +10,11 @@ type ReservationState = {
   loading: boolean;
   loadingStats: boolean;
   error: string | null;
-  websocketEvent: number;
-  clearWebsocketEvent: () => void;
+/*   websocketEvent: number;
+  clearWebsocketEvent: () => void; */
   fetchReservations: (from: Dayjs, to: Dayjs) => Promise<void>;
   fetchReservationsStats: () => Promise<void>;
-  initializeWebsocket: () => void;
+/*   initializeWebsocket: () => void; */
 };
 
 const initialStats: ReservationStats = {
@@ -30,8 +30,8 @@ const useReservationStore = create<ReservationState>()((set) => ({
   loading: false,
   loadingStats: false,
   error: null,
-  websocketEvent: 0,
-  clearWebsocketEvent: () => set({ websocketEvent: 0 }),
+/*   websocketEvent: 0,
+  clearWebsocketEvent: () => set({ websocketEvent: 0 }), */
   fetchReservations: async (from, to) => {
     try {
       set({ loading: true });
@@ -70,7 +70,7 @@ const useReservationStore = create<ReservationState>()((set) => ({
     }
   },
 
-  initializeWebsocket: () => {
+/*   initializeWebsocket: () => {
   
 
     socket.off("weekly summary");
@@ -79,7 +79,7 @@ const useReservationStore = create<ReservationState>()((set) => ({
 
       set({ stats: data });
     });
-  },
+  }, */
 }));
 
 export default useReservationStore;

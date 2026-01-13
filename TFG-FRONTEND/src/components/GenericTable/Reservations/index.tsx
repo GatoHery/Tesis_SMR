@@ -1,18 +1,18 @@
 import GenericTable from "@/components/GenericTable";
 import { getReservationColumns } from "./Columns";
 import useReservationStore from "@/store/reservation.store";
-import { useEffect } from "react";
+/* import { useEffect } from "react"; */
 
 type ReservationsTableProps = {
   onPageSizeChange?: (size:number) => void;
 }
 
 const ReservationsTable = ({ onPageSizeChange }: ReservationsTableProps) => {
-  const { reservations, loading, initializeWebsocket } = useReservationStore();
+  const { reservations, loading, /* initializeWebsocket  */} = useReservationStore();
 
-  useEffect(() => {
+/*   useEffect(() => {
     initializeWebsocket();
-  }, []);
+  }, []); */
 
   return (
     <GenericTable
