@@ -5,46 +5,17 @@ import useResourceStore from "@/store/resource.store";
 import useSensorStore from "@/store/sensor.store";
 
 const Sensors = () => {
-  const {
-    sensors,
-    loading,
-    fetchSensors,
-/*     initializeWebsocket,
-    websocketEvent,
-    clearWebsocketEvent, */
-  } = useSensorStore();
+  const { sensors, loading, fetchSensors } = useSensorStore();
 
   useEffect(() => {
     fetchSensors();
- /*    initializeWebsocket(); */
-  }, [fetchSensors]);
-/* 
-  useEffect(() => {
-    if (!websocketEvent) return;
 
-    clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]); */
-
-  /* variable para poder determinar el tiempo de inactividad de un sensor */
-  const tiempoDeEspera = 2 * 60 * 1000; // 2 minutos
-
-  /* variable para poder determinar el tiempo de inactividad de un sensor */
-  const [tiempoActual, setTiempoActual] = useState(Date.now());
-
-  /* timer que fuerza un re-render */
-  useEffect(() => {
     const interval = setInterval(() => {
-      setTiempoActual(Date.now());
-    }, 30000); // cada 30s re-evalúa
+      fetchSensors();
+    }, 60000);
 
-    return () => clearInterval(interval);
-  }, []);
-
-  /* se setean los sensores activos de haberlos realmente */
-  const activeSensors = sensors.filter((sensor) => {
-    const lastReadingTime = new Date(sensor.updatedAt).getTime();
-    return tiempoActual - lastReadingTime <= tiempoDeEspera;
-  });
+    return () => clearInterval(interval); // cada 60s re-evalúa
+  }, [fetchSensors]);
 
   return (
     <>
@@ -61,8 +32,8 @@ const Sensors = () => {
         </div>
       ) : (
         <Row gutter={[24, 24]}>
-          {activeSensors.length > 0 ? (
-            activeSensors.map((sensor) => (
+          {sensors.length > 0 ? (
+            sensors.map((sensor) => (
               <MonitorCard
                 key={sensor.ip}
                 type="sensor"
@@ -93,25 +64,12 @@ const Sensors = () => {
 };
 
 const Locations = () => {
-  const {
-    resources,
-    loading,
-    fetchResources,
-/*     initializeWebsocket,
-    websocketEvent,
-    clearWebsocketEvent, */
-  } = useResourceStore();
+  const { resources, loading, fetchResources } = useResourceStore();
 
   useEffect(() => {
     fetchResources();
-/*     initializeWebsocket(); */
   }, [fetchResources]);
 
-/*   useEffect(() => {
-    if (!websocketEvent) return;
-
-    clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]); */
   return (
     <>
       {loading ? (

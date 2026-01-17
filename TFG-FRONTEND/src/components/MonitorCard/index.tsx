@@ -1,4 +1,13 @@
-import { Button, Card, Col, Divider, Flex, Slider, Switch, Typography } from "antd"
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  Flex,
+  Slider,
+  Switch,
+  Typography,
+} from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { useEffect, useMemo, useState } from "react";
@@ -15,35 +24,51 @@ type MonitorCardProps = {
   threshold?: number;
   notifications?: boolean;
   alarm?: boolean;
-}
+};
 
 const formatTimeDiff = (timestamp: string) => {
-  const diff = Date.now() - new Date(timestamp).getTime();
+  /* formateando fecha y hora a la hora local del front */
+  const date = new Date(timestamp);
+
+  const localTime = date.getTime() - date.getTimezoneOffset() * 60000;
+  const diff = Date.now() - localTime;
 
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 60)
-    return `Hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
+  if (minutes < 60) return `Hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
 
   const hours = Math.floor(diff / 3600000);
-  if (hours < 24)
-    return `Hace ${hours} hora${hours !== 1 ? "s" : ""}`;
+  if (hours < 24) return `Hace ${hours} hora${hours !== 1 ? "s" : ""}`;
 
   const days = Math.floor(diff / 86400000);
   return `Hace ${days} día${days !== 1 ? "s" : ""}`;
 };
 
-const InfoRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
+const InfoRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) => (
   <Flex justify="space-between" align="center">
     <Typography.Text type="secondary">{label}:</Typography.Text>
     <Typography.Text>{value}</Typography.Text>
   </Flex>
 );
 
-const HeaderSection = ({ name, description }: { name: string, description: string }) => (
+const HeaderSection = ({
+  name,
+  description,
+}: {
+  name: string;
+  description: string;
+}) => (
   <Flex justify="space-between" align="center">
     <div>
       <Typography.Title level={5}>{name}</Typography.Title>
-      <Typography.Paragraph type="secondary">{description}</Typography.Paragraph>
+      <Typography.Paragraph type="secondary">
+        {description}
+      </Typography.Paragraph>
     </div>
   </Flex>
 );
@@ -54,11 +79,18 @@ const SensorCardContent = ({
   lastAlert,
   notifications,
   alarm,
-  threshold
+  threshold,
 }: Partial<MonitorCardProps>) => {
   // 🔧 FIX: Usar solo un estado para el threshold actual
   const [localThreshold, setLocalThreshold] = useState(threshold || 50);
-  const { isThresholdSetting, setAlarm, setNotifications, setThreshold, isAlarmSetting, isNotificationSetting } = useSensorStore();
+  const {
+    isThresholdSetting,
+    setAlarm,
+    setNotifications,
+    setThreshold,
+    isAlarmSetting,
+    isNotificationSetting,
+  } = useSensorStore();
 
   // 🔧 FIX: Sincronizar cuando cambie el threshold desde el store
   useEffect(() => {
@@ -79,12 +111,12 @@ const SensorCardContent = ({
     }
 
     console.log(`🔄 Actualizando threshold: ${threshold} → ${localThreshold}`);
-    
+
     try {
       await setThreshold(ip, localThreshold);
       toast.success(`Umbral actualizado: ${localThreshold} dB`);
     } catch (error) {
-      console.error('❌ Error updating threshold:', error);
+      console.error("❌ Error updating threshold:", error);
       toast.error("Error al actualizar el umbral");
       // Revertir el cambio local en caso de error
       setLocalThreshold(threshold || 50);
@@ -113,27 +145,49 @@ const SensorCardContent = ({
 
   return (
     <>
-      <Divider orientation="left" plain orientationMargin="0">Datos</Divider>
+      <Divider orientation="left" plain orientationMargin="0">
+        Datos
+      </Divider>
 
-      <InfoRow label="Lectura actual" value={currentReading && `${currentReading} dB`} />
+      <InfoRow
+        label="Lectura actual"
+        value={currentReading && `${currentReading} dB`}
+      />
 
-      <InfoRow label="Última alerta" value={lastAlert ? formatTimeDiff(lastAlert) : "Sin registrar"} />
+      <InfoRow
+        label="Última alerta"
+        value={lastAlert ? formatTimeDiff(lastAlert) : "Sin registrar"}
+      />
 
-      <Divider orientation="left" plain orientationMargin="0">Configuración</Divider>
+      <Divider orientation="left" plain orientationMargin="0">
+        Configuración
+      </Divider>
       <Flex vertical gap={6}>
         <Flex justify="space-between" align="center">
           <Typography.Text type="secondary">Alarma:</Typography.Text>
           {/* se cambio en el switch la prop value por checked y se añadieron props que inhabilitan el switch cuando se está guardando los datos */}
-          <Switch key={`alarm-${ip}`} checked={alarm} onChange={(value) => handleAlarm(value)} loading={isAlarmSetting} disabled={isAlarmSetting} /> 
+          <Switch
+            key={`alarm-${ip}`}
+            checked={alarm}
+            onChange={(value) => handleAlarm(value)}
+            loading={isAlarmSetting}
+            disabled={isAlarmSetting}
+          />
         </Flex>
         <Flex justify="space-between" align="center">
           <Typography.Text type="secondary">Notificaciones:</Typography.Text>
-          <Switch key={`notifications-${ip}`} checked={notifications} onChange={(value) => handleNotifications(value)} loading={isNotificationSetting} disabled={isNotificationSetting} />
+          <Switch
+            key={`notifications-${ip}`}
+            checked={notifications}
+            onChange={(value) => handleNotifications(value)}
+            loading={isNotificationSetting}
+            disabled={isNotificationSetting}
+          />
         </Flex>
 
-        <InfoRow 
-          label="Umbral" 
-          value={`${localThreshold} dB ${hasChanges ? '(modificado)' : ''}`} 
+        <InfoRow
+          label="Umbral"
+          value={`${localThreshold} dB ${hasChanges ? "(modificado)" : ""}`}
         />
         <Flex align="center" gap={8} style={{ marginTop: 6 }}>
           <Slider
@@ -157,38 +211,39 @@ const SensorCardContent = ({
         </Flex>
       </Flex>
     </>
-  )
-}
+  );
+};
 
 const LocationCardContent = ({
   maxParticipants,
 }: Partial<MonitorCardProps>) => {
-
   return (
     <>
-      <Divider orientation="left" plain orientationMargin="0">Datos</Divider>
-      <InfoRow label="Máx. participantes" value={maxParticipants ? maxParticipants : "N/A"} />
+      <Divider orientation="left" plain orientationMargin="0">
+        Datos
+      </Divider>
+      <InfoRow
+        label="Máx. participantes"
+        value={maxParticipants ? maxParticipants : "N/A"}
+      />
     </>
-  )
-
-}
+  );
+};
 
 const MonitorCard = (props: MonitorCardProps) => {
-
   return (
     <Col xs={24} sm={12} md={8} lg={8}>
       <Card variant="borderless">
         <HeaderSection name={props.name} description={props.description} />
 
-        {
-          props.type === "sensor" ?
-            <SensorCardContent {...props} />
-            :
-            <LocationCardContent {...props} />
-        }
+        {props.type === "sensor" ? (
+          <SensorCardContent {...props} />
+        ) : (
+          <LocationCardContent {...props} />
+        )}
       </Card>
     </Col>
-  )
-}
+  );
+};
 
-export default MonitorCard
+export default MonitorCard;
