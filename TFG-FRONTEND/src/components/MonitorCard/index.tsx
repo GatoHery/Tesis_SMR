@@ -27,11 +27,7 @@ type MonitorCardProps = {
 };
 
 const formatTimeDiff = (timestamp: string) => {
-  /* formateando fecha y hora a la hora local del front */
-  const date = new Date(timestamp);
-
-  const localTime = date.getTime() - date.getTimezoneOffset() * 60000;
-  const diff = Date.now() - localTime;
+  const diff = Math.max(0, Date.now() - new Date(timestamp).getTime());
 
   const minutes = Math.floor(diff / 60000);
   if (minutes < 60) return `Hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;

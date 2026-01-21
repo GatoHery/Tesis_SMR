@@ -23,10 +23,8 @@ const Sensors = () => {
 
   /* buscando sensores activos */
   const activeSensors = sensors.filter((sensor) => {
-    const date = new Date(sensor.updatedAt);
-
-    const localTime = date.getTime() - date.getTimezoneOffset() * 60000;
-    const diff = actualDate - localTime;
+    const last = new Date(sensor.updatedAt).getTime();
+    const diff = actualDate - last;
     return diff <= TIEMPO_ESPERA;
   });
 
