@@ -7,15 +7,28 @@ import useSensorStore from "@/store/sensor.store";
 const Sensors = () => {
   const { sensors, loading, fetchSensors } = useSensorStore();
 
+  const TIEMPO_ESPERA = 2 * 60 * 1000; // 2 minutos en milisegundos
+  const [actualDate, setActualDate] = useState(Date.now());
+
   useEffect(() => {
     fetchSensors();
 
     const interval = setInterval(() => {
       fetchSensors();
+      setActualDate(Date.now());
     }, 60000);
 
     return () => clearInterval(interval); // cada 60s re-evalúa
   }, [fetchSensors]);
+
+  /* buscando sensores activos */
+  const activeSensors = sensors.filter((sensor) => {
+    const date = new Date(sensor.updatedAt);
+
+    const localTime = date.getTime() - date.getTimezoneOffset() * 60000;
+    const diff = actualDate - localTime;
+    return diff <= TIEMPO_ESPERA;
+  });
 
   return (
     <>
@@ -32,8 +45,8 @@ const Sensors = () => {
         </div>
       ) : (
         <Row gutter={[24, 24]}>
-          {sensors.length > 0 ? (
-            sensors.map((sensor) => (
+          {activeSensors.length > 0 ? (
+            activeSensors.map((sensor) => (
               <MonitorCard
                 key={sensor.ip}
                 type="sensor"
