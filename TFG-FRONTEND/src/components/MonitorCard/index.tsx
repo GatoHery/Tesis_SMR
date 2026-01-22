@@ -27,7 +27,8 @@ type MonitorCardProps = {
 };
 
 const formatTimeDiff = (timestamp: string) => {
-  const diff = Math.max(0, Date.now() - new Date(timestamp).getTime());
+  const fixed = timestamp.replace("Z", ""); 
+  const diff = Math.max(0, Date.now() - new Date(fixed).getTime());
 
   const minutes = Math.floor(diff / 60000);
   if (minutes < 60) return `Hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
