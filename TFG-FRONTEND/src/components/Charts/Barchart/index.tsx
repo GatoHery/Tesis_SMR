@@ -9,14 +9,8 @@ import { useEffect } from "react";
 import { Card, Empty, Flex, Typography } from "antd";
 
 const Barchart = () => {
-  const {
-    weeklyAverages,
-    loadingWeekly,
-    fetchWeeklyAverages,
-/*     initializeWebsocket,
-    websocketEvent,
-    clearWebsocketEvent, */
-  } = useDashboardStore();
+  const { weeklyAverages, loadingWeekly, fetchWeeklyAverages } =
+    useDashboardStore();
   const { darkMode } = useThemeStore();
 
   const options: ApexOptions = {
@@ -80,14 +74,7 @@ const Barchart = () => {
 
   useEffect(() => {
     fetchWeeklyAverages();
-/*     initializeWebsocket(); */
   }, []);
-/* 
-  useEffect(() => {
-    if (!websocketEvent) return;
-
-    clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]); */
 
   return (
     <>

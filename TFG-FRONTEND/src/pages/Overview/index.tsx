@@ -24,9 +24,7 @@ const Overview = () => {
     metrics,
     fetchMetrics,
     loading,
-/*     initializeWebsocket,
-    clearWebsocketEvent,
-    websocketEvent, */
+
   } = useDashboardStore();
 
   const { Title, Paragraph } = Typography;
@@ -81,15 +79,16 @@ const Overview = () => {
   useEffect(() => {
     fetchAlerts();
     fetchMetrics();
-/*     initializeWebsocket(); */
+
+    const interval = setInterval(() => {
+      fetchAlerts();
+      fetchMetrics();
+    }, 60000);
+
+    return () => clearInterval(interval); // cada 60s re-evalúa
+
   }, [fetchAlerts, fetchMetrics]);
 
-/*   useEffect(() => {
-    if (!websocketEvent) return;
-
-    clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]);
- */
   return (
     <>
       <Flex vertical gap={24}>

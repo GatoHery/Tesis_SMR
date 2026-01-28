@@ -1,7 +1,6 @@
 import { dashboardService } from "@/services/dashboard.service";
 import { GrahpsData, Metrics } from "@/types/dashboard.type";
 import { create } from "zustand";
-/* import socket from "@/services/socket.client"; */
 
 type AlertState = {
   metrics: Metrics;
@@ -11,12 +10,9 @@ type AlertState = {
   loadingHourly: boolean;
   loadingWeekly: boolean;
   error: string | null;
-  /* websocketEvent: number;
-  clearWebsocketEvent: () => void; */
   fetchMetrics: () => Promise<void>;
   fetchHourlyStats: () => Promise<void>;
   fetchWeeklyAverages: () => Promise<void>;
-  /* initializeWebsocket: () => void; */
 };
 
 const initialMetrics: Metrics = {
@@ -53,8 +49,6 @@ const useDashboardStore = create<AlertState>()((set) => ({
   loadingHourly: true,
   loadingWeekly: true,
   error: null,
-  /* websocketEvent: 0,
-  clearWebsocketEvent: () => set({ websocketEvent: 0 }), */
 
   fetchMetrics: async () => {
     try {
@@ -101,31 +95,6 @@ const useDashboardStore = create<AlertState>()((set) => ({
     }
   },
 
-  /* initializeWebsocket: () => {
-
-    socket.off("dashboardMetrics");
-    socket.off("hourlyAverages");
-    socket.off("weeklyAverages");
-
-    socket.on("dashboard metrics", (data: Metrics) => {
-      console.log("Received dashboard metrics via websocket: ");
-
-      set({ metrics: data });
-    });
-
-    socket.on("hourly averages", (data: GrahpsData) => {
-      console.log("Received hourly averages via websocket: ");
-
-      set({ hourlyStats: data });
-    });
-
-    socket.on("weekly location averages", (data: GrahpsData) => {
-      console.log("Received weekly location averages via websocket: ");
-      
-      set({ weeklyAverages: data });
-    });
-
-  }, */
 }));
 
 export default useDashboardStore;

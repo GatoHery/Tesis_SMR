@@ -77,9 +77,7 @@ const Reservations = () => {
     fetchReservationsStats,
     stats,
     loadingStats,
-/*     initializeWebsocket,
-    clearWebsocketEvent,
-    websocketEvent, */
+
   } = useReservationStore();
 
   const data = [
@@ -95,10 +93,6 @@ const Reservations = () => {
   ];
 
   const [pageSize, setPageSize] = useState(10);
-/* 
-  useEffect(() => {
-    initializeWebsocket();
-  }, []); */
 
   useEffect(() => {
     fetchReservations(range[0].startOf("day"), range[1].endOf("day"));
@@ -108,12 +102,7 @@ const Reservations = () => {
     fetchReservationsStats();
   }, [fetchReservationsStats]);
 
-/*   useEffect(() => {
-    if (!websocketEvent) return;
 
-    clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]);
- */
   return (
     <Flex vertical gap={24}>
       <Row>

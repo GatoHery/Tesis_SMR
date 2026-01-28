@@ -1,7 +1,7 @@
 import { monitorService } from "@/services/monitor.service";
 import { Sensor } from "@/types/monitor.type";
 import { create } from "zustand";
-/* import socket from "@/services/socket.client"; */
+
 
 type SensorState = {
   sensors: Sensor[];
@@ -10,13 +10,11 @@ type SensorState = {
   isNotificationSetting: boolean;
   isThresholdSetting: boolean;
   error: string | null;
-/*   websocketEvent: number;
-  clearWebsocketEvent: () => void; */
   fetchSensors: () => Promise<void>;
   setAlarm: (sensorIp: string, value: boolean) => Promise<void>;
   setNotifications: (sensorIp: string, value: boolean) => Promise<void>;
   setThreshold: (sensorIp: string, value: number) => Promise<void>;
-/*   initializeWebsocket: () => void; */
+
 };
 
 const useSensorStore = create<SensorState>()((set, get) => ({
@@ -26,8 +24,7 @@ const useSensorStore = create<SensorState>()((set, get) => ({
   isNotificationSetting: false,
   isThresholdSetting: false,
   error: null,
-/*   websocketEvent: 0,
-  clearWebsocketEvent: () => set({ websocketEvent: 0 }), */
+
 
   fetchSensors: async () => {
     try {
@@ -160,14 +157,6 @@ const useSensorStore = create<SensorState>()((set, get) => ({
       throw error;
     }
   },
-
-/*   initializeWebsocket: () => {
-    socket.off("all sensors");
-    socket.on("all sensors", (data: Sensor[]) => {
-      console.log("Received all sensors via websocket: ");
-      set({ sensors: data });
-    });
-  }, */
 }));
 
 export default useSensorStore;

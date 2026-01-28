@@ -8,11 +8,7 @@ type ReservationsTableProps = {
 }
 
 const ReservationsTable = ({ onPageSizeChange }: ReservationsTableProps) => {
-  const { reservations, loading, /* initializeWebsocket  */} = useReservationStore();
-
-/*   useEffect(() => {
-    initializeWebsocket();
-  }, []); */
+  const { reservations, loading, } = useReservationStore();
 
   return (
     <GenericTable

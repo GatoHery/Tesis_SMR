@@ -16,9 +16,6 @@ const Linechart = () => {
     hourlyStats,
     loadingHourly,
     fetchHourlyStats,
-/*     initializeWebsocket,
-    clearWebsocketEvent,
-    websocketEvent, */
   } = useDashboardStore();
   const {
     token: { colorPrimary, colorError, colorBgContainer },
@@ -101,14 +98,7 @@ const Linechart = () => {
   useEffect(() => {
     console.log("🔄 Fetching hourly stats...");
     fetchHourlyStats();
- /*    initializeWebsocket(); */
   }, []);
-
-/*   useEffect(() => {
-    if (!websocketEvent) return;
-
-    clearWebsocketEvent();
-  }, [websocketEvent, clearWebsocketEvent]); */
 
   // 🔍 Verificar si hay datos antes de renderizar
   const hasData = hourlyStats?.values && hourlyStats.values.length > 0;

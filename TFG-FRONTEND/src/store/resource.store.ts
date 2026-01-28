@@ -1,24 +1,21 @@
 import { monitorService } from "@/services/monitor.service";
 import { Resource } from "@/types/monitor.type";
 import { create } from "zustand";
-/* import socket from "@/services/socket.client"; */
 
 type ResourceState = {
   resources: Resource[];
   loading: boolean;
   error: string | null;
-/*   websocketEvent: number;
-  clearWebsocketEvent: () => void; */
+
   fetchResources: () => Promise<void>;
-/*   initializeWebsocket: () => void; */
+
 };
 
 const useResourceStore = create<ResourceState>()((set) => ({
   resources: [],
   loading: true,
   error: null,
-/*   websocketEvent: 0,
-  clearWebsocketEvent: () => set({ websocketEvent: 0 }), */
+
 
   fetchResources: async () => {
     try {
@@ -41,13 +38,7 @@ const useResourceStore = create<ResourceState>()((set) => ({
     }
   },
 
-/*   initializeWebsocket: () => {
-    socket.off("simplified resources");
-    socket.on("simplified resources", (data: Resource[]) => {
-      console.log("Received simplified resources via websocket: ");
-      set({ resources: data });
-    });
-  }, */
+
 }));
 
 export default useResourceStore;

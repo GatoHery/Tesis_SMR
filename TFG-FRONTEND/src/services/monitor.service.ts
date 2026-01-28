@@ -155,24 +155,6 @@ export const monitorService = {
     }
   },
 
-  /* setAlarm: async (sensorIp: string, value: boolean) => {
-    try {
-      const res = await createEspInstance(sensorIp).patch(
-        "/set-alarm",
-        new URLSearchParams({ value: value.toString() }),
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
-      return res.data;
-    } catch (error) {
-      console.error("ESP alarm error:", error);
-      throw error;
-    }
-  }, */
-
   upsertSensor: async (payload: SensorData) => {
     const res = await api.patch(
       `${SENSOR_PATH}`,

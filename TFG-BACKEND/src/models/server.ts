@@ -4,7 +4,6 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { dbConnection } from "../database/config";
-/* import { Server as SocketIOServer } from "socket.io"; */
 import http from "http";
 import {
   authRoutes,
