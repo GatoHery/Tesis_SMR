@@ -84,7 +84,7 @@ const Login = () => {
                     alt="Google"
                     style={{ width: 18, height: 18 }}
                   />
-                  Continuar con Google UCA
+                  Continuar con Google
                 </Button>
 
                 <img
